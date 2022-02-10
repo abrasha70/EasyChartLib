@@ -15,15 +15,13 @@ namespace EasyChartLib
         }
 
         private readonly PercentGraphics _drawingArea;
-        private readonly float _axeMinValue;
-        private readonly float _axeMaxValue;
+        private readonly Axis _axis;
         private readonly EDirection _direction;
 
-        public ChartDrawer(PercentGraphics drawingArea, float axeMinValue, float axeMaxValue, EDirection direction = EDirection.BottomToTop)
+        public ChartDrawer(PercentGraphics drawingArea, Axis axis, EDirection direction = EDirection.BottomToTop)
         {
             _drawingArea = drawingArea;
-            _axeMinValue = axeMinValue;
-            _axeMaxValue = axeMaxValue;
+            _axis = axis;
             _direction = direction;
         }
 
@@ -109,7 +107,7 @@ namespace EasyChartLib
             if (value == null)
                 percentage = nullPercentage;
             else
-                percentage = (value.Value - _axeMinValue) / (_axeMaxValue - _axeMinValue) * 100;
+                percentage = (value.Value - _axis.MinValue) / (_axis.MaxValue - _axis.MinValue) * 100;
 
             if (isInverted) percentage = 100 - percentage;
 

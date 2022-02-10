@@ -71,7 +71,7 @@ namespace EasyChartLib
 
         private void DrawCategoryGraphs(ChartSettings settings, Axis axis, Category categoryData, PercentGraphics graphArea)
         {
-            var drawer = new ChartDrawer(graphArea, axis.MinValue, axis.MaxValue, ChartDrawer.EDirection.BottomToTop);
+            var drawer = new ChartDrawer(graphArea, axis, ChartDrawer.EDirection.BottomToTop);
 
             //Ranks:
             foreach (var rank in categoryData.Ranks)
