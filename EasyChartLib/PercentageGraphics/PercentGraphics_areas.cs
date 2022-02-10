@@ -20,14 +20,22 @@ namespace EasyChartLib.PercentageGraphics
         }
 
 
-        public List<PercentGraphics> HorizontalSplit(int count)
+        public List<PercentGraphics> HorizontalSplit(float splitSize)
+        {
+            var parts = new List<PercentGraphics>();
+            parts.Add(CreateSubArea(0, 0, splitSize, ScaleHeight));
+            parts.Add(CreateSubArea(splitSize, 0, ScaleWidth - splitSize, ScaleHeight));
+            return parts;
+        }
+
+        public List<PercentGraphics> HorizontalMultiSplit(int count)
         {
             var partWidth = ScaleWidth / count;
             var parts = Enumerable.Range(0, count).Select((index) => CreateSubArea(index * partWidth, 0, partWidth, ScaleHeight));
             return parts.ToList();
         }
 
-        public List<PercentGraphics> HorizontalSplit(List<float?> lengthSizes)
+        public List<PercentGraphics> HorizontalMultiSplit(List<float?> lengthSizes)
         {
             var resized = AutoResizeLengths(lengthSizes, ScaleWidth);
 
@@ -44,14 +52,22 @@ namespace EasyChartLib.PercentageGraphics
         }
 
 
-        public List<PercentGraphics> VerticalSplit(int count)
+        public List<PercentGraphics> VerticalSplit(float splitSize)
+        {
+            var parts = new List<PercentGraphics>();
+            parts.Add(CreateSubArea(0, 0, ScaleWidth, splitSize));
+            parts.Add(CreateSubArea(0, splitSize, ScaleWidth, ScaleHeight - splitSize));
+            return parts;
+        }
+
+        public List<PercentGraphics> VerticalMultiSplit(int count)
         {
             var partHeight = ScaleHeight / count;
-            var parts = Enumerable.Range(0, count).Select((index) => CreateSubArea(ScaleWidth, index * partHeight, 0, partHeight));
+            var parts = Enumerable.Range(0, count).Select((index) => CreateSubArea(0, index * partHeight, ScaleWidth, partHeight));
             return parts.ToList();
         }
 
-        public List<PercentGraphics> VerticalSplit(List<float?> lengthSizes)
+        public List<PercentGraphics> VerticalMultiSplit(List<float?> lengthSizes)
         {
             var resized = AutoResizeLengths(lengthSizes, ScaleHeight);
 

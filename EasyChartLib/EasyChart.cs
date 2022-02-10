@@ -12,7 +12,7 @@ namespace EasyChartLib
 {
     public class EasyChart
     {
-        public Image GenerateMultiRankChart(ChartSettings settings, List<Category> periods)
+        public Image GenerateMultiRankChart(ChartSettings settings, List<Category> categories)
         {
             var bmp = new Bitmap(settings.Width, settings.Height);
 
@@ -22,42 +22,14 @@ namespace EasyChartLib
 
 
             var axisWidth = imageArea.MeasureString("999", settings.Font).Width;
-            var lengthSizes = new List<float?> { axisWidth * 1.5f, null };
-            var areas = imageArea.HorizontalSplit(lengthSizes);
+            var areas = imageArea.HorizontalSplit(axisWidth * 1.5f);
 
             var axisArea = areas[0];
             var chartsArea = areas[1];
 
-            axisArea.DrawString("999", settings.Font, Brushes.Black, new PointF(0, 0));
+            var categoryHeight = chartsArea.MeasureString("Category", settings.Font).Height * 1.5f;
 
-
-            var periodAreas = chartsArea.HorizontalSplit(periods.Count);
-            for (int index = 0; index < periods.Count; index++)
-            {
-                var periodData = periods[index];
-                var periodArea = periodAreas[index];
-
-                DrawCategoryChart(settings, periodData, periodArea);
-            }
-            //chartsArea.DrawRectangle(Pens.Black, 0, 0, 100, 100);
-
-            return bmp;
-        }
-
-
-
-        private void DrawCategoryChart(ChartSettings settings, Category categoryData, PercentGraphics chartArea)
-        {
-            var categoryHeight = chartArea.MeasureString("Category", settings.Font).Height;
-
-            var lengthSizes = new List<float?> { null, categoryHeight * 1.5f };
-            var areas = chartArea.VerticalSplit(lengthSizes);
-
-            var graphArea = areas[0];
-            var categoryArea = areas[1];
-
-            var alignment = new Alignment { Horizontal = HorizontalAlignment.CenteredToPoint, Vertical = VerticalAlignment.CenteredToPoint };
-            categoryArea.DrawString(categoryData.Name, settings.Font, Brushes.Black, new PointF(50, 50), alignment);
+            axisArea = axisArea.CreateSubArea(0, 0, 100, 100 - categoryHeight);
 
             var axis = new Axis
             {
@@ -66,12 +38,34 @@ namespace EasyChartLib
                 TickSize = 5f,
             };
 
-            DrawCategoryGraphs(settings, axis, categoryData, graphArea);
+            var axisDrawer = new ChartDrawer(axisArea, axis, ChartDrawer.EDirection.BottomToTop);
+            axisDrawer.DrawAxis(Pens.Black, settings.Font, Brushes.Black);
+
+
+            var categoryAreas = chartsArea.HorizontalMultiSplit(categories.Count);
+            for (int index = 0; index < categories.Count; index++)
+            {
+                var categoryData = categories[index];
+                var categoryArea = categoryAreas[index];
+
+                var periodParts = categoryArea.VerticalSplit(100 - categoryHeight);
+                var graphArea = periodParts[0];
+                var labelsArea = periodParts[1];
+
+                DrawCategoryGraphs(settings, graphArea, categoryData, axis, ChartDrawer.EDirection.BottomToTop);
+
+                DrawCategoryLabels(settings, labelsArea, categoryData);
+
+            }
+
+            return bmp;
         }
 
-        private void DrawCategoryGraphs(ChartSettings settings, Axis axis, Category categoryData, PercentGraphics graphArea)
+
+
+        private void DrawCategoryGraphs(ChartSettings settings, PercentGraphics graphArea, Category categoryData, Axis axis, ChartDrawer.EDirection direction)
         {
-            var drawer = new ChartDrawer(graphArea, axis, ChartDrawer.EDirection.BottomToTop);
+            var drawer = new ChartDrawer(graphArea, axis, direction);
 
             //Ranks:
             foreach (var rank in categoryData.Ranks)
@@ -95,6 +89,13 @@ namespace EasyChartLib
 
             //Axis 0:
             drawer.DrawLevelLine(Pens.Black, 0);
+        }
+
+
+        private void DrawCategoryLabels(ChartSettings settings, PercentGraphics labelsArea, Category categoryData)
+        {
+            var alignment = new Alignment { Horizontal = HorizontalAlignment.CenteredToPoint, Vertical = VerticalAlignment.CenteredToPoint };
+            labelsArea.DrawString(categoryData.Name, settings.Font, Brushes.Black, new PointF(50, 50), alignment);
         }
 
 

@@ -42,16 +42,40 @@ namespace EasyChartLib
             var valuePercentage = GetValueInPecentage(value, 0);
 
             //crop:
-
             if (valuePercentage < 0 || valuePercentage > 100) return;
 
             var columnMarginSize = 100 - lineSize;
-
             DrawRotatingLine(pen, columnMarginSize / 2, valuePercentage, 100 - columnMarginSize / 2, valuePercentage);
+        }
+        public void DrawLevelLine(Pen pen, float value, float offset, float lineSize)
+        {
+            var valuePercentage = GetValueInPecentage(value, 0);
 
+            //crop:
+            if (valuePercentage < 0 || valuePercentage > 100) return;
 
+            DrawRotatingLine(pen, offset, valuePercentage, offset + lineSize, valuePercentage);
         }
 
+        internal void DrawAxis(Pen tickPen, Font font, Brush textColor)
+        {
+            var tickSize = _axis.TickSize;
+            var minValue = (float)Math.Floor(_axis.MinValue / tickSize) * tickSize;
+            var maxValue = (float)Math.Ceiling(_axis.MaxValue / tickSize) * tickSize;
+
+            for (float tick = minValue; tick < maxValue; tick += tickSize)
+            {
+                var percentTick = GetValueInPecentage(tick, 0);
+
+                //crop:
+                if (tick < minValue || tick > maxValue) continue;
+
+                DrawLevelLine(tickPen, tick, 75, 25);
+
+                var alignment = new Alignment { Horizontal = HorizontalAlignment.LeftToPoint, Vertical = VerticalAlignment.CenteredToPoint };
+                _drawingArea.DrawString(tick.ToString(), font, textColor, new PointF(75, percentTick), alignment);
+            }
+        }
 
         private void FillChartColumnArea(Brush brush, float? fromValue, float? toValue, float columnSize)
         {

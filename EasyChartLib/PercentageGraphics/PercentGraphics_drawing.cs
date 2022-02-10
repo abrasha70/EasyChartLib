@@ -29,7 +29,7 @@ namespace EasyChartLib.PercentageGraphics
 
             //adjust alignment:
             var textSize = MeasureString(text, font);
-            if (alignment.Horizontal == HorizontalAlignment.RightToPoint) adjustedPoint.X -= textSize.Width;
+            if (alignment.Horizontal == HorizontalAlignment.LeftToPoint) adjustedPoint.X -= textSize.Width;
             if (alignment.Horizontal == HorizontalAlignment.CenteredToPoint) adjustedPoint.X -= textSize.Width / 2;
             if (alignment.Vertical == VerticalAlignment.AbovePoint) adjustedPoint.Y -= textSize.Height;
             if (alignment.Vertical == VerticalAlignment.CenteredToPoint) adjustedPoint.Y -= textSize.Height / 2;
