@@ -42,8 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Axis.cs" />
     <Compile Include="ChartDrawer.cs" />
-    <Compile Include="ChartStyle.cs" />
     <Compile Include="EasyChart.cs" />
     <Compile Include="PercentageGraphics\ActualMargin.cs" />
     <Compile Include="PercentageGraphics\Alignment.cs" />
