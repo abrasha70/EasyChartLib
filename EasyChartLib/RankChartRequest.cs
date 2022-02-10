@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 
@@ -32,6 +33,7 @@ namespace EasyChartLib
             public int DecimalDigits { get; set; }
             public int RanksAlpha { get; set; }
             public Dictionary<string, RankDef> RankDefs { get; set; }
+            public Font Font { get; set; }
 
         }
 

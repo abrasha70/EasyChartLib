@@ -1,6 +1,7 @@
 ﻿using EasyChartLib;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
@@ -34,41 +35,43 @@ namespace Tester
                     ShowLegend = true,
                     ShowTarget = RankChartRequest.EVisibility.Visible,
                     RanksAlpha = 128,
+                    Font = SystemFonts.DefaultFont,
+
                     RankDefs = new Dictionary<string, RankChartRequest.RankDef>
-                {
                     {
-                        "low",
-                        new RankChartRequest.RankDef
                         {
-                            Name = "Low",
-                            ColorHex = "AACCFF",
-                        }
-                    },
-                    {
-                        "norm",
-                        new RankChartRequest.RankDef
-                        {
-                            Name = "Normal",
-                            ColorHex = "00FF44",
-                        }
-                    },
-                    {
-                        "high",
-                        new RankChartRequest.RankDef
-                        {
-                            Name = "High",
-                            ColorHex = "FFFF00",
-                        }
-                    },
-                    {
-                        "high2",
-                        new RankChartRequest.RankDef
+                            "low",
+                            new RankChartRequest.RankDef
                             {
-                            Name = "Very High",
-                            ColorHex = "FF0000",
-                        }
+                                Name = "Low",
+                                ColorHex = "AACCFF",
+                            }
+                        },
+                        {
+                            "norm",
+                            new RankChartRequest.RankDef
+                            {
+                                Name = "Normal",
+                                ColorHex = "00FF44",
+                            }
+                        },
+                        {
+                            "high",
+                            new RankChartRequest.RankDef
+                            {
+                                Name = "High",
+                                ColorHex = "FFFF00",
+                            }
+                        },
+                        {
+                            "high2",
+                            new RankChartRequest.RankDef
+                                {
+                                Name = "Very High",
+                                ColorHex = "FF0000",
+                            }
+                        },
                     },
-                },
                 },
                 Periods = new List<RankChartRequest.Category>
                 {

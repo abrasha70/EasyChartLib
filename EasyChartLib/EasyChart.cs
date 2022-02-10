@@ -20,21 +20,15 @@ namespace EasyChartLib
             var imageArea = new PercentGraphics(bmp, margin);
             imageArea.FillRectange(Brushes.White, 0, 0, 100, 100);
 
-            var style = new ChartStyle
-            {
-                AxisFont = SystemFonts.DefaultFont,
-                AxisMinValue = 0f,
-                AxisMaxValue = 30f,
-            };
 
-            var axisWidth = imageArea.MeasureString("999", style.AxisFont).Width;
+            var axisWidth = imageArea.MeasureString("999", settings.Font).Width;
             var lengthSizes = new List<float?> { axisWidth * 1.5f, null };
             var areas = imageArea.HorizontalSplit(lengthSizes);
 
             var axisArea = areas[0];
             var chartsArea = areas[1];
 
-            axisArea.DrawString("999", style.AxisFont, Brushes.Black, new PointF(0, 0));
+            axisArea.DrawString("999", settings.Font, Brushes.Black, new PointF(0, 0));
 
 
             var periodAreas = chartsArea.HorizontalSplit(periods.Count);
@@ -43,7 +37,7 @@ namespace EasyChartLib
                 var periodData = periods[index];
                 var periodArea = periodAreas[index];
 
-                DrawCategoryChart(settings, style, periodData, periodArea);
+                DrawCategoryChart(settings, periodData, periodArea);
             }
             //chartsArea.DrawRectangle(Pens.Black, 0, 0, 100, 100);
 
@@ -52,9 +46,9 @@ namespace EasyChartLib
 
 
 
-        private void DrawCategoryChart(ChartSettings settings, ChartStyle style, Category categoryData, PercentGraphics chartArea)
+        private void DrawCategoryChart(ChartSettings settings, Category categoryData, PercentGraphics chartArea)
         {
-            var categoryHeight = chartArea.MeasureString("Category", style.AxisFont).Height;
+            var categoryHeight = chartArea.MeasureString("Category", settings.Font).Height;
 
             var lengthSizes = new List<float?> { null, categoryHeight * 1.5f };
             var areas = chartArea.VerticalSplit(lengthSizes);
@@ -63,14 +57,21 @@ namespace EasyChartLib
             var categoryArea = areas[1];
 
             var alignment = new Alignment { Horizontal = HorizontalAlignment.CenteredToPoint, Vertical = VerticalAlignment.CenteredToPoint };
-            categoryArea.DrawString(categoryData.Name, style.AxisFont, Brushes.Black, new PointF(50, 50), alignment);
+            categoryArea.DrawString(categoryData.Name, settings.Font, Brushes.Black, new PointF(50, 50), alignment);
 
-            DrawCategoryGraphs(settings, style, categoryData, graphArea);
+            var axis = new Axis
+            {
+                MinValue = 0f,
+                MaxValue = 30f,
+                TickSize = 5f,
+            };
+
+            DrawCategoryGraphs(settings, axis, categoryData, graphArea);
         }
 
-        private void DrawCategoryGraphs(ChartSettings settings, ChartStyle style, Category categoryData, PercentGraphics graphArea)
+        private void DrawCategoryGraphs(ChartSettings settings, Axis axis, Category categoryData, PercentGraphics graphArea)
         {
-            var drawer = new ChartDrawer(graphArea, style.AxisMinValue, style.AxisMaxValue, ChartDrawer.EDirection.BottomToTop);
+            var drawer = new ChartDrawer(graphArea, axis.MinValue, axis.MaxValue, ChartDrawer.EDirection.BottomToTop);
 
             //Ranks:
             foreach (var rank in categoryData.Ranks)
