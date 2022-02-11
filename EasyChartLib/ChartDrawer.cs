@@ -60,10 +60,10 @@ namespace EasyChartLib
         internal void DrawAxis(Pen tickPen, Font font, Brush textColor)
         {
             var tickSize = _axis.TickSize;
-            var minValue = (float)Math.Floor(_axis.MinValue / tickSize) * tickSize;
-            var maxValue = (float)Math.Ceiling(_axis.MaxValue / tickSize) * tickSize;
+            var minValue = (float)Math.Ceiling(_axis.MinValue / tickSize) * tickSize;
+            var maxValue = (float)Math.Floor(_axis.MaxValue / tickSize) * tickSize;
 
-            for (float tick = minValue; tick < maxValue; tick += tickSize)
+            for (float tick = minValue; tick <= maxValue; tick += tickSize)
             {
                 var percentTick = GetValueInPecentage(tick, 0);
 

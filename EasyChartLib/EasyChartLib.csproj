@@ -45,6 +45,7 @@
     <Compile Include="Axis.cs" />
     <Compile Include="ChartDrawer.cs" />
     <Compile Include="EasyChart.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="PercentageGraphics\ActualMargin.cs" />
     <Compile Include="PercentageGraphics\Alignment.cs" />
     <Compile Include="PercentageGraphics\PercentGraphics_drawing.cs" />

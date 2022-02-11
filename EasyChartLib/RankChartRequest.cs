@@ -13,14 +13,6 @@ namespace EasyChartLib
         public List<Category> Periods { get; set; }
 
 
-        //Definitions:
-
-        public enum EVisibility
-        {
-            Visible,
-            Hidden,
-            OnlyLast
-        }
 
 
         public class ChartSettings
@@ -34,6 +26,7 @@ namespace EasyChartLib
             public int RanksAlpha { get; set; }
             public Dictionary<string, RankDef> RankDefs { get; set; }
             public Font Font { get; set; }
+            public EAxisMode AxisMode { get; set; }
 
         }
 
@@ -47,7 +40,7 @@ namespace EasyChartLib
         public class Category
         {
             public string Name { get; set; }
-            public float? Value { get; set; }
+            public float? Measured { get; set; }
             public float? Target { get; set; }
             public List<Rank> Ranks { get; set; }
 

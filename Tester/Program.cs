@@ -33,7 +33,8 @@ namespace Tester
                     DecimalDigits = 1,
                     ShowAxis = true,
                     ShowLegend = true,
-                    ShowTarget = RankChartRequest.EVisibility.Visible,
+                    ShowTarget = EVisibility.Visible,
+                    AxisMode = EAxisMode.FocusedAndAround,
                     RanksAlpha = 128,
                     Font = SystemFonts.DefaultFont,
 
@@ -78,8 +79,8 @@ namespace Tester
                     new RankChartRequest.Category
                     {
                         Name = "Dec-21",
-                        Value = 23,
-                        Target = 5,
+                        Measured = 23,
+                        Target = 20,
                         Ranks = new List<RankChartRequest.Rank>
                         {
                             new RankChartRequest.Rank
@@ -111,8 +112,8 @@ namespace Tester
                     new RankChartRequest.Category
                     {
                         Name = "Jan-22",
-                        Value = 20.5f,
-                        Target = 4,
+                        Measured = 20.5f,
+                        Target = 18,
                         Ranks = new List<RankChartRequest.Rank>
                         {
                             new RankChartRequest.Rank
@@ -144,8 +145,8 @@ namespace Tester
                     new RankChartRequest.Category
                     {
                         Name = "Feb-22",
-                        Value = 15f,
-                        Target = 4,
+                        Measured = 16.5f,
+                        Target = 15,
                         Ranks = new List<RankChartRequest.Rank>
                         {
                             new RankChartRequest.Rank
