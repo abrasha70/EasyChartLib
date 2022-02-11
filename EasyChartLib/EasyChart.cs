@@ -98,8 +98,13 @@ namespace EasyChartLib
 
 
 
+        private Axis GetAxis(Category category, float textLengthPercentage, EAxisMode axisMode)
+        {
+            var categories = new List<Category> { category };
+            return GetAxis(categories, textLengthPercentage, axisMode);
+        }
 
-        private Axis GetAxis(List<Category> categories, float textHeightPercentage, EAxisMode axisMode)
+        private Axis GetAxis(List<Category> categories, float textLengthPercentage, EAxisMode axisMode)
         {
             var axis = new Axis();
             var allValues = GetRelevantValues(categories, axisMode);
@@ -111,7 +116,7 @@ namespace EasyChartLib
 
             if (axis.MinValue < 0 && minValue >= 0) axis.MinValue = 0;
 
-            axis.TickSize = CalcTickSize(axis.MinValue, axis.MaxValue, textHeightPercentage);
+            axis.TickSize = CalcTickSize(axis.MinValue, axis.MaxValue, textLengthPercentage);
             return axis;
         }
 
@@ -137,6 +142,7 @@ namespace EasyChartLib
             if (value < round5) return round5;
             return round10;
         }
+
 
 
         private List<float> GetRelevantValues(List<Category> categories, EAxisMode axisMode)
