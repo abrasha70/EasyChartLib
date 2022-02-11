@@ -29,7 +29,7 @@ namespace EasyChartLib
 
             var textSize = chartsArea.MeasureString("Text", settings.Font);
             var textHeight = chartsArea.MeasureString("Text", settings.Font).Height;
-            
+
 
             var categoryHeight = textHeight * 1.5f;
             axisArea = axisArea.CreateSubArea(0, 0, 100, 100 - categoryHeight);
@@ -141,7 +141,7 @@ namespace EasyChartLib
 
         private List<float> GetRelevantValues(List<Category> categories, EAxisMode axisMode)
         {
-            switch(axisMode)
+            switch (axisMode)
             {
                 case EAxisMode.All:
                     return GetAllValues(categories);
@@ -149,6 +149,8 @@ namespace EasyChartLib
                     return GetFocusedValues(categories);
                 case EAxisMode.FocusedAndAround:
                     return GetFocusedAndAroundValues(categories);
+                case EAxisMode.FocusedAndNearby:
+                    return GetFocusedAndNearbyValues(categories);
                 default:
                     return null;
             }
@@ -184,7 +186,7 @@ namespace EasyChartLib
             var targets = categories.Select(category => category.Target);
             var surroundRanks = categories.SelectMany(
                 category => category.Ranks.Where(
-                    rank => 
+                    rank =>
                     IsBetween(category.Measured, rank.MinValue, rank.MaxValue) ||
                     IsBetween(category.Target, rank.MinValue, rank.MaxValue)
                     )
@@ -194,6 +196,47 @@ namespace EasyChartLib
 
             var unified = measured.Union(targets).Union(rankMins).Union(rankMaxs);
             var result = unified.Where(item => item.HasValue).Select(item => item.Value);
+
+            return result.ToList();
+        }
+
+        private List<float> GetFocusedAndNearbyValues(List<Category> categories)
+        {
+            var allValues = new List<float?>();
+
+            foreach (var category in categories)
+            {
+                allValues.Add(category.Measured);
+                allValues.Add(category.Target);
+                var ranks = category.Ranks;
+                for (int rankIndex = 0; rankIndex < ranks.Count; rankIndex++)
+                {
+                    var rank = ranks[rankIndex];
+                    var prev = rankIndex > 0 ? ranks[rankIndex - 1] : null;
+                    var next = rankIndex < ranks.Count - 1 ? ranks[rankIndex + 1] : null;
+
+                    if (IsBetween(category.Measured, rank.MinValue, rank.MaxValue) || IsBetween(category.Target, rank.MinValue, rank.MaxValue))
+                    {
+                        allValues.Add(rank.MinValue);
+                        allValues.Add(rank.MaxValue);
+                    }
+
+                    if (prev != null &&
+                        (IsBetween(category.Measured, prev.MinValue, prev.MaxValue) || IsBetween(category.Target, prev.MinValue, prev.MaxValue)))
+                    {
+                        allValues.Add(prev.MinValue);
+                        allValues.Add(prev.MaxValue);
+                    }
+
+                    if (next != null &&
+                        (IsBetween(category.Measured, next.MinValue, next.MaxValue) || IsBetween(category.Target, next.MinValue, next.MaxValue)))
+                    {
+                        allValues.Add(next.MinValue);
+                        allValues.Add(next.MaxValue);
+                    }
+                }
+            }
+            var result = allValues.Where(item => item.HasValue).Select(item => item.Value).Distinct();
 
             return result.ToList();
         }

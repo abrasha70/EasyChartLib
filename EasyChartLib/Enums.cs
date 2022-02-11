@@ -10,7 +10,8 @@ namespace EasyChartLib
     {
         All,
         Focused,
-        FocusedAndAround
+        FocusedAndAround,
+        FocusedAndNearby,
     }
 
     public enum EVisibility

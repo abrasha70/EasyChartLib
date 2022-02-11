@@ -34,7 +34,7 @@ namespace Tester
                     ShowAxis = true,
                     ShowLegend = true,
                     ShowTarget = EVisibility.Visible,
-                    AxisMode = EAxisMode.FocusedAndAround,
+                    AxisMode = EAxisMode.FocusedAndNearby,
                     RanksAlpha = 128,
                     Font = SystemFonts.DefaultFont,
 
