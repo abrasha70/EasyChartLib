@@ -215,24 +215,14 @@ namespace EasyChartLib
                     var prev = rankIndex > 0 ? ranks[rankIndex - 1] : null;
                     var next = rankIndex < ranks.Count - 1 ? ranks[rankIndex + 1] : null;
 
-                    if (IsBetween(category.Measured, rank.MinValue, rank.MaxValue) || IsBetween(category.Target, rank.MinValue, rank.MaxValue))
+                    var overlapCurrent = IsBetween(category.Measured, rank.MinValue, rank.MaxValue) || IsBetween(category.Target, rank.MinValue, rank.MaxValue);
+                    var overlapPrev = prev != null && (IsBetween(category.Measured, prev.MinValue, prev.MaxValue) || IsBetween(category.Target, prev.MinValue, prev.MaxValue));
+                    var overlapNext = next != null && (IsBetween(category.Measured, next.MinValue, next.MaxValue) || IsBetween(category.Target, next.MinValue, next.MaxValue));
+
+                    if (overlapCurrent || overlapPrev || overlapNext)
                     {
                         allValues.Add(rank.MinValue);
                         allValues.Add(rank.MaxValue);
-                    }
-
-                    if (prev != null &&
-                        (IsBetween(category.Measured, prev.MinValue, prev.MaxValue) || IsBetween(category.Target, prev.MinValue, prev.MaxValue)))
-                    {
-                        allValues.Add(prev.MinValue);
-                        allValues.Add(prev.MaxValue);
-                    }
-
-                    if (next != null &&
-                        (IsBetween(category.Measured, next.MinValue, next.MaxValue) || IsBetween(category.Target, next.MinValue, next.MaxValue)))
-                    {
-                        allValues.Add(next.MinValue);
-                        allValues.Add(next.MaxValue);
                     }
                 }
             }

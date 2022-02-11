@@ -146,7 +146,7 @@ namespace Tester
                     {
                         Name = "Feb-22",
                         Measured = 16.5f,
-                        Target = 15,
+                        Target = 14,
                         Ranks = new List<RankChartRequest.Rank>
                         {
                             new RankChartRequest.Rank
