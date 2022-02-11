@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace EasyChartLib.PercentageGraphics
 {
-    public partial class PercentGraphics
+    internal partial class PercentGraphics
     {
         private readonly Bitmap _bmp;
         private readonly Graphics _gfx;

@@ -1,19 +1,19 @@
 ﻿namespace EasyChartLib.PercentageGraphics
 {
-    public class Alignment
+    internal class Alignment
     {
         public VerticalAlignment Vertical { get; set; } = VerticalAlignment.BelowPoint;
         public HorizontalAlignment Horizontal { get; set; } = HorizontalAlignment.RightToPoint;
     }
 
-    public enum VerticalAlignment
+    internal enum VerticalAlignment
     {
         BelowPoint,
         CenteredToPoint,
         AbovePoint
     }
 
-    public enum HorizontalAlignment
+    internal enum HorizontalAlignment
     {
         RightToPoint,
         CenteredToPoint,

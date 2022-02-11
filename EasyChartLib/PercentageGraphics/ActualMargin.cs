@@ -2,7 +2,7 @@
 
 namespace EasyChartLib.PercentageGraphics
 {
-    public class ActualMargin
+    internal class ActualMargin
     {
         public int Left { get; set; }
         public int Top { get; set; }

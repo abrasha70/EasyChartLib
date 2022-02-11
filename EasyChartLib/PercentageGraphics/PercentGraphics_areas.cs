@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace EasyChartLib.PercentageGraphics
 {
-    public partial class PercentGraphics
+    internal partial class PercentGraphics
     {
 
         public PercentGraphics CreateSubArea(RectangleF rect)

@@ -6,7 +6,7 @@ namespace EasyChartLib.PercentageGraphics
 {
 
 
-    public partial class PercentGraphics
+    internal partial class PercentGraphics
     {
 
 

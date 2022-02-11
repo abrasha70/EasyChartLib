@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace EasyChartLib
 {
-    public class ChartDrawer
+    internal class ChartDrawer
     {
         public enum EDirection
         {
