@@ -17,6 +17,7 @@ namespace Tester
             var chart = new EasyChart();
 
             var image = chart.GenerateMultiRankChart(request.Settings, request.Periods);
+            //var image = chart.GenerateSingleRankChart(request.Settings, request.Periods[0]);
             image.Save("sample.png", ImageFormat.Png);
             System.Diagnostics.Process.Start("sample.png");
         }

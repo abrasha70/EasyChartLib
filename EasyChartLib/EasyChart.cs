@@ -20,25 +20,21 @@ namespace EasyChartLib
             var imageArea = new PercentGraphics(bmp, margin);
             imageArea.FillRectange(Brushes.White, 0, 0, 100, 100);
 
+            var textSize = imageArea.MeasureString("Text", settings.Font);
+            var textHeight = textSize.Height;
 
-            var axisWidth = imageArea.MeasureString("999", settings.Font).Width;
-            var areas = imageArea.HorizontalSplit(axisWidth * 1.5f);
-
+            var axisTextWidth = textSize.Width;
+            var areas = imageArea.HorizontalSplit(axisTextWidth * 1.5f);
             var axisArea = areas[0];
             var chartsArea = areas[1];
-
-            var textSize = chartsArea.MeasureString("Text", settings.Font);
-            var textHeight = chartsArea.MeasureString("Text", settings.Font).Height;
 
 
             var categoryHeight = textHeight * 1.5f;
             axisArea = axisArea.CreateSubArea(0, 0, 100, 100 - categoryHeight);
 
             var axis = GetAxis(categories, textHeight, settings.AxisMode);
-
             var axisDrawer = new ChartDrawer(axisArea, axis, ChartDrawer.EDirection.BottomToTop);
             axisDrawer.DrawAxis(Pens.Black, settings.Font, Brushes.Black);
-
 
             var categoryAreas = chartsArea.HorizontalMultiSplit(categories.Count);
             for (int index = 0; index < categories.Count; index++)
@@ -53,11 +49,42 @@ namespace EasyChartLib
                 DrawCategoryGraphs(settings, graphArea, categoryData, axis, ChartDrawer.EDirection.BottomToTop);
 
                 DrawCategoryLabels(settings, labelsArea, categoryData);
-
             }
 
             return bmp;
         }
+
+
+        public Image GenerateSingleRankChart(ChartSettings settings, Category category)
+        {
+            var bmp = new Bitmap(settings.Width, settings.Height);
+
+            var margin = new ActualMargin(0, 0, 1, 1);
+            var imageArea = new PercentGraphics(bmp, margin);
+            imageArea.FillRectange(Brushes.White, 0, 0, 100, 100);
+
+            var textSize = imageArea.MeasureString("Text", settings.Font);
+            var axisTextHeight = textSize.Height;
+
+            var areas = imageArea.VerticalSplit(100 - axisTextHeight * 1.5f);
+            var chartsArea = areas[0];
+            var axisArea = areas[1];
+
+            var axis = GetAxis(category, axisTextHeight, settings.AxisMode);
+            var axisDrawer = new ChartDrawer(axisArea, axis, ChartDrawer.EDirection.LeftToRight);
+            axisDrawer.DrawAxis(Pens.Black, settings.Font, Brushes.Black);
+
+            DrawCategoryGraphs(settings, chartsArea, category, axis, ChartDrawer.EDirection.LeftToRight);
+
+            return bmp;
+        }
+
+
+
+
+
+
+
 
 
 

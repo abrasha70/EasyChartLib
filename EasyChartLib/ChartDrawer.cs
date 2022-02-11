@@ -70,10 +70,19 @@ namespace EasyChartLib
                 //crop:
                 if (tick < minValue || tick > maxValue) continue;
 
-                DrawLevelLine(tickPen, tick, 75, 25);
+                if (IsVertical())
+                {
+                    DrawLevelLine(tickPen, tick, 75, 25);
+                    var alignment = new Alignment { Horizontal = HorizontalAlignment.LeftToPoint, Vertical = VerticalAlignment.CenteredToPoint };
+                    _drawingArea.DrawString(tick.ToString(), font, textColor, new PointF(75, percentTick), alignment);
+                }
+                else
+                {
+                    DrawLevelLine(tickPen, tick, 0, 25);
+                    var alignment = new Alignment { Horizontal = HorizontalAlignment.CenteredToPoint, Vertical = VerticalAlignment.AbovePoint };
+                    _drawingArea.DrawString(tick.ToString(), font, textColor, new PointF(percentTick, 100), alignment);
+                }
 
-                var alignment = new Alignment { Horizontal = HorizontalAlignment.LeftToPoint, Vertical = VerticalAlignment.CenteredToPoint };
-                _drawingArea.DrawString(tick.ToString(), font, textColor, new PointF(75, percentTick), alignment);
             }
         }
 
@@ -119,6 +128,32 @@ namespace EasyChartLib
                 _drawingArea.DrawLine(pen, y1, x1, y2, x2);
             }
         }
+
+
+        //private void DrawRotatingString(string text, Font font, Brush brush, PointF point, Alignment alignment)
+        //{
+        //    if (IsVertical())
+        //    {
+        //        _drawingArea.DrawString(text, font, brush, point, alignment);
+        //    }
+        //    else
+        //    {
+        //        var rotatedPoint = new PointF(point.Y, point.X);
+        //        _drawingArea.DrawString(text, font, brush, rotatedPoint, alignment);
+        //    }
+        //}
+        //private void DrawRotatingString(string text, Font font, Brush brush, PointF point)
+        //{
+        //    if (IsVertical())
+        //    {
+        //        _drawingArea.DrawString(text, font, brush, point);
+        //    }
+        //    else
+        //    {
+        //        var rotatedPoint = new PointF(point.Y, point.X);
+        //        _drawingArea.DrawString(text, font, brush, rotatedPoint);
+        //    }
+        //}
 
 
 
