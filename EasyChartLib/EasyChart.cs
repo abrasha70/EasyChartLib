@@ -12,9 +12,10 @@ namespace EasyChartLib
 {
     public class EasyChart
     {
-        public Image GenerateMultiRankChart(ChartSettings settings, List<Category> categories)
+        public Image GenerateMultiRankChart(ChartSettings rawSettings, List<Category> categories)
         {
-            var bmp = new Bitmap(settings.Width, settings.Height);
+            var settings = new LoadedSettings(rawSettings);
+            var bmp = new Bitmap(settings.Raw.Width, settings.Raw.Height);
 
             var margin = new ActualMargin(0, 0, 1, 1);
             var imageArea = new PercentGraphics(bmp, margin);
@@ -32,7 +33,7 @@ namespace EasyChartLib
             var categoryHeight = textHeight * 1.5f;
             axisArea = axisArea.CreateSubArea(0, 0, 100, 100 - categoryHeight);
 
-            var axis = GetAxis(categories, textHeight, settings.AxisMode);
+            var axis = GetAxis(categories, textHeight, settings.Raw.AxisMode);
             var axisDrawer = new ChartDrawer(axisArea, axis, ChartDrawer.EDirection.BottomToTop);
             axisDrawer.DrawAxis(Pens.Black, settings.Font, Brushes.Black);
 
@@ -55,9 +56,10 @@ namespace EasyChartLib
         }
 
 
-        public Image GenerateSingleRankChart(ChartSettings settings, Category category)
+        public Image GenerateSingleRankChart(ChartSettings rawSettings, Category category)
         {
-            var bmp = new Bitmap(settings.Width, settings.Height);
+            var settings = new LoadedSettings(rawSettings);
+            var bmp = new Bitmap(settings.Raw.Width, settings.Raw.Height);
 
             var margin = new ActualMargin(0, 0, 1, 1);
             var imageArea = new PercentGraphics(bmp, margin);
@@ -70,7 +72,7 @@ namespace EasyChartLib
             var chartsArea = areas[0];
             var axisArea = areas[1];
 
-            var axis = GetAxis(category, axisTextHeight, settings.AxisMode);
+            var axis = GetAxis(category, axisTextHeight, settings.Raw.AxisMode);
             var axisDrawer = new ChartDrawer(axisArea, axis, ChartDrawer.EDirection.LeftToRight);
             axisDrawer.DrawAxis(Pens.Black, settings.Font, Brushes.Black);
 
@@ -88,16 +90,18 @@ namespace EasyChartLib
 
 
 
-        private void DrawCategoryGraphs(ChartSettings settings, PercentGraphics graphArea, Category categoryData, Axis axis, ChartDrawer.EDirection direction)
+        private void DrawCategoryGraphs(LoadedSettings settings, PercentGraphics graphArea, Category categoryData, Axis axis, ChartDrawer.EDirection direction)
         {
             var drawer = new ChartDrawer(graphArea, axis, direction);
 
             //Ranks:
-            foreach (var rank in categoryData.Ranks)
+            var rankRanges = categoryData.GetRanksAsRanges();
+            foreach (var rank in rankRanges)
             {
-                var colorHex = settings.RankDefs[rank.Key].ColorHex;
-                var brush = HexToBrush(colorHex, settings.RanksAlpha);
-                drawer.FillChartRange(brush, rank.MinValue, rank.MaxValue);
+                //var colorHex = settings.RankDefs[rank.Key].ColorHex;
+                var colorHex = settings.Raw.RankColors[rank.Index];
+                var brush = HexToBrush(colorHex, settings.Raw.RanksAlpha);
+                drawer.FillChartRange(brush, rank.FromValue, rank.ToValue);
             }
 
             //Value:
@@ -117,7 +121,8 @@ namespace EasyChartLib
         }
 
 
-        private void DrawCategoryLabels(ChartSettings settings, PercentGraphics labelsArea, Category categoryData)
+
+        private void DrawCategoryLabels(LoadedSettings settings, PercentGraphics labelsArea, Category categoryData)
         {
             var alignment = new Alignment { Horizontal = HorizontalAlignment.CenteredToPoint, Vertical = VerticalAlignment.CenteredToPoint };
             labelsArea.DrawString(categoryData.Name, settings.Font, Brushes.Black, new PointF(50, 50), alignment);
@@ -193,8 +198,8 @@ namespace EasyChartLib
         {
             var measured = categories.Select(category => category.Measured);
             var targets = categories.Select(category => category.Target);
-            var rankMins = categories.SelectMany(category => category.Ranks.Select(rank => rank.MinValue));
-            var rankMaxs = categories.SelectMany(category => category.Ranks.Select(rank => rank.MaxValue));
+            var rankMins = categories.SelectMany(category => category.GetRanksAsRanges().Select(rank => rank.FromValue));
+            var rankMaxs = categories.SelectMany(category => category.GetRanksAsRanges().Select(rank => rank.ToValue));
 
             var unified = measured.Union(targets).Union(rankMins).Union(rankMaxs);
             var result = unified.Where(item => item.HasValue).Select(item => item.Value);
@@ -218,14 +223,14 @@ namespace EasyChartLib
             var measured = categories.Select(category => category.Measured);
             var targets = categories.Select(category => category.Target);
             var surroundRanks = categories.SelectMany(
-                category => category.Ranks.Where(
+                category => category.GetRanksAsRanges().Where(
                     rank =>
-                    IsBetween(category.Measured, rank.MinValue, rank.MaxValue) ||
-                    IsBetween(category.Target, rank.MinValue, rank.MaxValue)
+                    IsBetween(category.Measured, rank.FromValue, rank.ToValue) ||
+                    IsBetween(category.Target, rank.FromValue, rank.ToValue)
                     )
                 );
-            var rankMins = surroundRanks.Select(rank => rank.MinValue);
-            var rankMaxs = surroundRanks.Select(rank => rank.MaxValue);
+            var rankMins = surroundRanks.Select(rank => rank.FromValue);
+            var rankMaxs = surroundRanks.Select(rank => rank.ToValue);
 
             var unified = measured.Union(targets).Union(rankMins).Union(rankMaxs);
             var result = unified.Where(item => item.HasValue).Select(item => item.Value);
@@ -241,21 +246,21 @@ namespace EasyChartLib
             {
                 allValues.Add(category.Measured);
                 allValues.Add(category.Target);
-                var ranks = category.Ranks;
+                var ranks = category.GetRanksAsRanges();
                 for (int rankIndex = 0; rankIndex < ranks.Count; rankIndex++)
                 {
                     var rank = ranks[rankIndex];
                     var prev = rankIndex > 0 ? ranks[rankIndex - 1] : null;
                     var next = rankIndex < ranks.Count - 1 ? ranks[rankIndex + 1] : null;
 
-                    var overlapCurrent = IsBetween(category.Measured, rank.MinValue, rank.MaxValue) || IsBetween(category.Target, rank.MinValue, rank.MaxValue);
-                    var overlapPrev = prev != null && (IsBetween(category.Measured, prev.MinValue, prev.MaxValue) || IsBetween(category.Target, prev.MinValue, prev.MaxValue));
-                    var overlapNext = next != null && (IsBetween(category.Measured, next.MinValue, next.MaxValue) || IsBetween(category.Target, next.MinValue, next.MaxValue));
+                    var overlapCurrent = IsBetween(category.Measured, rank.FromValue, rank.ToValue) || IsBetween(category.Target, rank.FromValue, rank.ToValue);
+                    var overlapPrev = prev != null && (IsBetween(category.Measured, prev.FromValue, prev.ToValue) || IsBetween(category.Target, prev.FromValue, prev.ToValue));
+                    var overlapNext = next != null && (IsBetween(category.Measured, next.FromValue, next.ToValue) || IsBetween(category.Target, next.FromValue, next.ToValue));
 
                     if (overlapCurrent || overlapPrev || overlapNext)
                     {
-                        allValues.Add(rank.MinValue);
-                        allValues.Add(rank.MaxValue);
+                        allValues.Add(rank.FromValue);
+                        allValues.Add(rank.ToValue);
                     }
                 }
             }

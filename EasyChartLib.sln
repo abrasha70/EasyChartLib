@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyChartLib", "EasyChartLi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tester", "Tester\Tester.csproj", "{8247CC4B-1ADF-4789-856A-861855AB1DE2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChartApi", "ChartApi\ChartApi.csproj", "{9623ED81-23CD-4FEE-9CF8-D29DCC88CC22}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8247CC4B-1ADF-4789-856A-861855AB1DE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8247CC4B-1ADF-4789-856A-861855AB1DE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8247CC4B-1ADF-4789-856A-861855AB1DE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9623ED81-23CD-4FEE-9CF8-D29DCC88CC22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9623ED81-23CD-4FEE-9CF8-D29DCC88CC22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9623ED81-23CD-4FEE-9CF8-D29DCC88CC22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9623ED81-23CD-4FEE-9CF8-D29DCC88CC22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

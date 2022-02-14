@@ -27,7 +27,7 @@ namespace Tester
         {
             var request = new RankChartRequest()
             {
-                Settings = new RankChartRequest.ChartSettings
+                Settings = new ChartSettings
                 {
                     Height = 300,
                     Width = 500,
@@ -35,45 +35,10 @@ namespace Tester
                     ShowAxis = true,
                     ShowLegend = true,
                     ShowTarget = EVisibility.Visible,
-                    AxisMode = EAxisMode.FocusedAndNearby,
+                    AxisMode = EAxisMode.All,
                     RanksAlpha = 128,
-                    Font = SystemFonts.DefaultFont,
-
-                    RankDefs = new Dictionary<string, RankChartRequest.RankDef>
-                    {
-                        {
-                            "low",
-                            new RankChartRequest.RankDef
-                            {
-                                Name = "Low",
-                                ColorHex = "AACCFF",
-                            }
-                        },
-                        {
-                            "norm",
-                            new RankChartRequest.RankDef
-                            {
-                                Name = "Normal",
-                                ColorHex = "00FF44",
-                            }
-                        },
-                        {
-                            "high",
-                            new RankChartRequest.RankDef
-                            {
-                                Name = "High",
-                                ColorHex = "FFFF00",
-                            }
-                        },
-                        {
-                            "high2",
-                            new RankChartRequest.RankDef
-                                {
-                                Name = "Very High",
-                                ColorHex = "FF0000",
-                            }
-                        },
-                    },
+                    FontSize = SystemFonts.DefaultFont.Size,
+                    RankColors = new List<string> { "AACCFF", "00FF44", "FFFF00", "FF0000" },
                 },
                 Periods = new List<RankChartRequest.Category>
                 {
@@ -82,99 +47,21 @@ namespace Tester
                         Name = "Dec-21",
                         Measured = 23,
                         Target = 20,
-                        Ranks = new List<RankChartRequest.Rank>
-                        {
-                            new RankChartRequest.Rank
-                            {
-                                Key = "high2",
-                                MinValue = 17,
-                                MaxValue = null
-                            },
-                            new RankChartRequest.Rank
-                            {
-                                Key = "high",
-                                MinValue = 12,
-                                MaxValue = 17
-                            },
-                            new RankChartRequest.Rank
-                            {
-                                Key = "norm",
-                                MinValue = 5,
-                                MaxValue = 12
-                            },
-                            new RankChartRequest.Rank
-                            {
-                                Key = "low",
-                                MinValue = null,
-                                MaxValue = 5
-                            },
-                        }
+                        Ranks = new List<float?> { null, 5, 12, 17, null },
                     },
                     new RankChartRequest.Category
                     {
                         Name = "Jan-22",
                         Measured = 20.5f,
                         Target = 18,
-                        Ranks = new List<RankChartRequest.Rank>
-                        {
-                            new RankChartRequest.Rank
-                            {
-                                Key = "high2",
-                                MinValue = 16,
-                                MaxValue = null
-                            },
-                            new RankChartRequest.Rank
-                            {
-                                Key = "high",
-                                MinValue = 12,
-                                MaxValue = 16
-                            },
-                            new RankChartRequest.Rank
-                            {
-                                Key = "norm",
-                                MinValue = 5,
-                                MaxValue = 12
-                            },
-                            new RankChartRequest.Rank
-                            {
-                                Key = "low",
-                                MinValue = null,
-                                MaxValue = 5
-                            },
-                        }
+                        Ranks = new List<float?> { null, 5, 12, 16, null },
                     },
                     new RankChartRequest.Category
                     {
                         Name = "Feb-22",
                         Measured = 16.5f,
                         Target = 14,
-                        Ranks = new List<RankChartRequest.Rank>
-                        {
-                            new RankChartRequest.Rank
-                            {
-                                Key = "high2",
-                                MinValue = 16,
-                                MaxValue = null
-                            },
-                            new RankChartRequest.Rank
-                            {
-                                Key = "high",
-                                MinValue = 12,
-                                MaxValue = 16
-                            },
-                            new RankChartRequest.Rank
-                            {
-                                Key = "norm",
-                                MinValue = 5,
-                                MaxValue = 12
-                            },
-                            new RankChartRequest.Rank
-                            {
-                                Key = "low",
-                                MinValue = null,
-                                MaxValue = 5
-                            },
-                        }
+                        Ranks = new List<float?> { null, 5, 12, 16, null },
                     },
                 },
             };

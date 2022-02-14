@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Axis.cs" />
     <Compile Include="ChartDrawer.cs" />
+    <Compile Include="ChartSettings.cs" />
     <Compile Include="EasyChart.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="PercentageGraphics\ActualMargin.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RankChartRequest.cs" />
     <Compile Include="PercentageGraphics\PercentGraphics_areas.cs" />
+    <Compile Include="RankRange.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
