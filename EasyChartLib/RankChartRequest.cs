@@ -37,13 +37,5 @@ namespace EasyChartLib
             }
         }
 
-        //public class Rank
-        //{
-        //    public string Key { get; set; }
-        //    public float? MinValue { get; set; }
-        //    public float? MaxValue { get; set; }
-        //}
-
-
     }
 }

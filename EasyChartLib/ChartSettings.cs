@@ -13,7 +13,6 @@ namespace EasyChartLib
         public EVisibility ShowTarget { get; set; }
         public int DecimalDigits { get; set; }
         public int RanksAlpha { get; set; }
-        //public Dictionary<string, RankDef> RankDefs { get; set; }
         public List<string> RankColors { get; set; }
         public List<string> RankNames { get; set; }
         public float FontSize { get; set; }
@@ -35,12 +34,6 @@ namespace EasyChartLib
 
     }
 
-
-    //public class RankDef
-    //{
-    //    public string Name { get; set; }
-    //    public string ColorHex { get; set; }
-    //}
 
 
 }
