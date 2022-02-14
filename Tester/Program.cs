@@ -16,7 +16,7 @@ namespace Tester
             var request = GetSampleRequest();
             var chart = new EasyChart();
 
-            var image = chart.GenerateMultiRankChart(request.Settings, request.Periods);
+            var image = chart.GenerateMultiRankChart(request.Settings, request.Categories);
             //var image = chart.GenerateSingleRankChart(request.Settings, request.Periods[0]);
             image.Save("sample.png", ImageFormat.Png);
             System.Diagnostics.Process.Start("sample.png");
@@ -40,7 +40,7 @@ namespace Tester
                     FontSize = SystemFonts.DefaultFont.Size,
                     RankColors = new List<string> { "AACCFF", "00FF44", "FFFF00", "FF0000" },
                 },
-                Periods = new List<RankChartRequest.Category>
+                Categories = new List<RankChartRequest.Category>
                 {
                     new RankChartRequest.Category
                     {

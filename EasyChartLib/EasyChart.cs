@@ -12,7 +12,7 @@ namespace EasyChartLib
 {
     public class EasyChart
     {
-        public Image GenerateMultiRankChart(ChartSettings rawSettings, List<Category> categories)
+        public Image GenerateMultiRankChart(ChartSettings rawSettings, List<SingleCategoryData> categories)
         {
             var settings = new LoadedSettings(rawSettings);
             var bmp = new Bitmap(settings.Raw.Width, settings.Raw.Height);
@@ -56,7 +56,7 @@ namespace EasyChartLib
         }
 
 
-        public Image GenerateSingleRankChart(ChartSettings rawSettings, Category category)
+        public Image GenerateSingleRankChart(ChartSettings rawSettings, SingleCategoryData chartData)
         {
             var settings = new LoadedSettings(rawSettings);
             var bmp = new Bitmap(settings.Raw.Width, settings.Raw.Height);
@@ -72,11 +72,11 @@ namespace EasyChartLib
             var chartsArea = areas[0];
             var axisArea = areas[1];
 
-            var axis = GetAxis(category, axisTextHeight, settings.Raw.AxisMode);
+            var axis = GetAxis(chartData, axisTextHeight, settings.Raw.AxisMode);
             var axisDrawer = new ChartDrawer(axisArea, axis, ChartDrawer.EDirection.LeftToRight);
             axisDrawer.DrawAxis(Pens.Black, settings.Font, Brushes.Black);
 
-            DrawCategoryGraphs(settings, chartsArea, category, axis, ChartDrawer.EDirection.LeftToRight);
+            DrawCategoryGraphs(settings, chartsArea, chartData, axis, ChartDrawer.EDirection.LeftToRight);
 
             return bmp;
         }
@@ -90,7 +90,7 @@ namespace EasyChartLib
 
 
 
-        private void DrawCategoryGraphs(LoadedSettings settings, PercentGraphics graphArea, Category categoryData, Axis axis, ChartDrawer.EDirection direction)
+        private void DrawCategoryGraphs(LoadedSettings settings, PercentGraphics graphArea, SingleCategoryData categoryData, Axis axis, ChartDrawer.EDirection direction)
         {
             var drawer = new ChartDrawer(graphArea, axis, direction);
 
@@ -122,7 +122,7 @@ namespace EasyChartLib
 
 
 
-        private void DrawCategoryLabels(LoadedSettings settings, PercentGraphics labelsArea, Category categoryData)
+        private void DrawCategoryLabels(LoadedSettings settings, PercentGraphics labelsArea, SingleCategoryData categoryData)
         {
             var alignment = new Alignment { Horizontal = HorizontalAlignment.CenteredToPoint, Vertical = VerticalAlignment.CenteredToPoint };
             labelsArea.DrawString(categoryData.Name, settings.Font, Brushes.Black, new PointF(50, 50), alignment);
@@ -130,13 +130,13 @@ namespace EasyChartLib
 
 
 
-        private Axis GetAxis(Category category, float textLengthPercentage, EAxisMode axisMode)
+        private Axis GetAxis(SingleCategoryData category, float textLengthPercentage, EAxisMode axisMode)
         {
-            var categories = new List<Category> { category };
+            var categories = new List<SingleCategoryData> { category };
             return GetAxis(categories, textLengthPercentage, axisMode);
         }
 
-        private Axis GetAxis(List<Category> categories, float textLengthPercentage, EAxisMode axisMode)
+        private Axis GetAxis(List<SingleCategoryData> categories, float textLengthPercentage, EAxisMode axisMode)
         {
             var axis = new Axis();
             var allValues = GetRelevantValues(categories, axisMode);
@@ -177,7 +177,7 @@ namespace EasyChartLib
 
 
 
-        private List<float> GetRelevantValues(List<Category> categories, EAxisMode axisMode)
+        private List<float> GetRelevantValues(List<SingleCategoryData> categories, EAxisMode axisMode)
         {
             switch (axisMode)
             {
@@ -194,7 +194,7 @@ namespace EasyChartLib
             }
         }
 
-        private List<float> GetAllValues(List<Category> categories)
+        private List<float> GetAllValues(List<SingleCategoryData> categories)
         {
             var measured = categories.Select(category => category.Measured);
             var targets = categories.Select(category => category.Target);
@@ -207,7 +207,7 @@ namespace EasyChartLib
             return result.ToList();
         }
 
-        private List<float> GetFocusedValues(List<Category> categories)
+        private List<float> GetFocusedValues(List<SingleCategoryData> categories)
         {
             var measuredValues = categories.Select(category => category.Measured);
             var targetValues = categories.Select(category => category.Target);
@@ -218,7 +218,7 @@ namespace EasyChartLib
             return result.ToList();
         }
 
-        private List<float> GetFocusedAndAroundValues(List<Category> categories)
+        private List<float> GetFocusedAndAroundValues(List<SingleCategoryData> categories)
         {
             var measured = categories.Select(category => category.Measured);
             var targets = categories.Select(category => category.Target);
@@ -238,7 +238,7 @@ namespace EasyChartLib
             return result.ToList();
         }
 
-        private List<float> GetFocusedAndNearbyValues(List<Category> categories)
+        private List<float> GetFocusedAndNearbyValues(List<SingleCategoryData> categories)
         {
             var allValues = new List<float?>();
 

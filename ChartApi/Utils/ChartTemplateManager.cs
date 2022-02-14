@@ -1,5 +1,7 @@
 ﻿using EasyChartLib;
 using System;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace ChartApi.Utils
 {
@@ -13,10 +15,23 @@ namespace ChartApi.Utils
         {
             if (templateName == "default")
             {
-                return null;
+                var settings = new ChartSettings()
+                {
+                    Height = 300,
+                    Width = 500,
+                    DecimalDigits = 1,
+                    ShowAxis = true,
+                    ShowLegend = true,
+                    ShowTarget = EVisibility.Visible,
+                    AxisMode = EAxisMode.All,
+                    RanksAlpha = 128,
+                    FontSize = SystemFonts.DefaultFont.Size,
+                    RankColors = new List<string> { "AACCFF", "00FF44", "FFFF00", "FF0000" },
+                };
+                return settings;
             }
 
-            return null;
+            throw new KeyNotFoundException("Template could not be found");
         }
 
 
