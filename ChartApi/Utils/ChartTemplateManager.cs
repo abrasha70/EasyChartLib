@@ -22,7 +22,6 @@ namespace ChartApi.Utils
                     DecimalDigits = 1,
                     ShowAxis = true,
                     ShowLegend = true,
-                    ShowTarget = EVisibility.Visible,
                     AxisMode = EAxisMode.All,
                     RanksAlpha = 128,
                     FontSize = SystemFonts.DefaultFont.Size,

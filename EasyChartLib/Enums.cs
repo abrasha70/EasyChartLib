@@ -13,11 +13,4 @@ namespace EasyChartLib
         FocusedAndAround,
         FocusedAndNearby,
     }
-
-    public enum EVisibility
-    {
-        Visible,
-        Hidden,
-        OnlyLast
-    }
 }

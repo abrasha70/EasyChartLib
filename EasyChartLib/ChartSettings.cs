@@ -11,10 +11,12 @@ namespace EasyChartLib
         
         [JsonProperty("width")]
         public int Width { get; set; }
-        
+
+        [JsonProperty("show_axis")]
         public bool ShowAxis { get; set; }
+
+        [JsonProperty("show_Legend")]
         public bool ShowLegend { get; set; }
-        public EVisibility ShowTarget { get; set; }
         public int DecimalDigits { get; set; }
         public int RanksAlpha { get; set; }
         public List<string> RankColors { get; set; }

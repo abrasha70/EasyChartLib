@@ -34,29 +34,28 @@ namespace Tester
                     DecimalDigits = 1,
                     ShowAxis = true,
                     ShowLegend = true,
-                    ShowTarget = EVisibility.Visible,
                     AxisMode = EAxisMode.All,
                     RanksAlpha = 128,
                     FontSize = SystemFonts.DefaultFont.Size,
                     RankColors = new List<string> { "AACCFF", "00FF44", "FFFF00", "FF0000" },
                 },
-                Categories = new List<RankChartRequest.Category>
+                Categories = new List<SingleCategoryData>
                 {
-                    new RankChartRequest.Category
+                    new SingleCategoryData
                     {
                         Name = "Dec-21",
                         Measured = 23,
                         Target = 20,
                         Ranks = new List<float?> { null, 5, 12, 17, null },
                     },
-                    new RankChartRequest.Category
+                    new SingleCategoryData
                     {
                         Name = "Jan-22",
                         Measured = 20.5f,
                         Target = 18,
                         Ranks = new List<float?> { null, 5, 12, 16, null },
                     },
-                    new RankChartRequest.Category
+                    new SingleCategoryData
                     {
                         Name = "Feb-22",
                         Measured = 16.5f,
