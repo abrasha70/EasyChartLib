@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
 
 namespace EasyChartLib
 {
@@ -18,22 +17,4 @@ namespace EasyChartLib
         public float FontSize { get; set; }
         public EAxisMode AxisMode { get; set; }
     }
-
-    internal class LoadedSettings
-    {
-        public ChartSettings Raw { get; private set; }
-        public Font Font { get; set; }
-
-
-        public LoadedSettings(ChartSettings chartSettings)
-        {
-            Raw = chartSettings;
-            Font = new Font(SystemFonts.DefaultFont.FontFamily, chartSettings.FontSize);
-        }
-
-
-    }
-
-
-
 }
