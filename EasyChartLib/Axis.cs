@@ -7,13 +7,18 @@ namespace EasyChartLib
 {
     internal class Axis
     {
+        private readonly ChartSettings _settings;
+
         public float MinValue { get; private set; }
         public float MaxValue { get; private set; }
         public float TickLength { get; private set; }
+        public int DecimalDigits { get; private set; }
         public float SpaceNeeded { get; private set; }
 
         public Axis(ChartSettings settings, List<SingleCategoryData> categories, SizeF digitSizeInPercentage, bool isVerticalAxis)
         {
+            _settings = settings;
+
             var allValues = GetRelevantValues(categories, settings.AxisMode);
             var minValue = allValues.Min();
             var maxValue = allValues.Max();
@@ -23,11 +28,12 @@ namespace EasyChartLib
 
             if (MinValue < 0 && minValue >= 0) MinValue = 0;
 
-            var axisTextFormat = GetAxisTextFormat(settings.DecimalDigits);
+            var axisTextFormat = GetAxisTextFormat();
             var maxDigits = allValues.Max(value => value.ToString().Length);
             var textLengthPercentage = isVerticalAxis ? digitSizeInPercentage.Height : digitSizeInPercentage.Width * maxDigits;
             SpaceNeeded = isVerticalAxis ? digitSizeInPercentage.Width * maxDigits : digitSizeInPercentage.Height;
             TickLength = CalcTickSize(MinValue, MaxValue, textLengthPercentage);
+            DecimalDigits = GetDecimalDigits(TickLength);
         }
 
         public Axis (ChartSettings settings, SingleCategoryData category, SizeF digitSizeInPercentage, bool isVerticalAxis)
@@ -45,30 +51,37 @@ namespace EasyChartLib
             var maxAmountOfTicks = (float)Math.Floor(100f / (textLengthPercentage * 2f));
             var gap = maxValue - minValue;
             var tickSize = gap / maxAmountOfTicks;
-            tickSize = AutoRound(tickSize);
-
-            return tickSize;
+            
+            var roundedTickSize = AutoRound(tickSize);
+            return roundedTickSize;
         }
 
         private float AutoRound(float value)
         {
-            var power = Math.Round(Math.Log10(value));
-            var round1 = 1f * (float)Math.Pow(10, power);
-            var round2 = 2f * (float)Math.Pow(10, power);
-            var round5 = 5f * (float)Math.Pow(10, power);
-            var round10 = 10f * (float)Math.Pow(10, power);
+            var power10 = Math.Round(Math.Log10(value));
+            var round1 = 1f * (float)Math.Pow(10, power10);
+            var round2 = 2f * (float)Math.Pow(10, power10);
+            var round5 = 5f * (float)Math.Pow(10, power10);
+            var round10 = 10f * (float)Math.Pow(10, power10);
             if (value < round1) return round1;
             if (value < round2) return round2;
             if (value < round5) return round5;
             return round10;
         }
 
-
-
-        private string GetAxisTextFormat(int decimalDigits)
+        private int GetDecimalDigits(float tickLength)
         {
-            if (decimalDigits == 0) return "0";
-            return "0." + new string('0', decimalDigits);
+            var power10 = Math.Log10(tickLength);
+            if (power10 >= 0) return 0;
+            return (int)Math.Ceiling(Math.Abs(power10));
+        }
+
+
+
+        public string GetAxisTextFormat()
+        {
+            if (DecimalDigits == 0) return "0";
+            return "0." + new string('0', DecimalDigits);
         }
 
 

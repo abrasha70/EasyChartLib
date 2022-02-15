@@ -59,28 +59,30 @@ namespace EasyChartLib
 
         internal void DrawAxis(Pen tickPen, Font font, Brush textColor)
         {
-            var tickSize = _axis.TickLength;
-            var minValue = (float)Math.Ceiling(_axis.MinValue / tickSize) * tickSize;
-            var maxValue = (float)Math.Floor(_axis.MaxValue / tickSize) * tickSize;
+            var tickSize = (decimal)_axis.TickLength;
+            var minValue = (decimal)Math.Ceiling((decimal)_axis.MinValue / tickSize) * tickSize;
+            var maxValue = (decimal)Math.Floor((decimal)_axis.MaxValue / tickSize) * tickSize;
+            var textFormat = _axis.GetAxisTextFormat();
 
-            for (float tick = minValue; tick <= maxValue; tick += tickSize)
+            for (decimal tick = minValue; tick <= maxValue; tick += tickSize)
             {
-                var percentTick = GetValueInPecentage(tick, 0);
+                var percentTick = GetValueInPecentage((float)tick, 0);
 
                 //crop:
                 if (tick < minValue || tick > maxValue) continue;
 
+
                 if (IsVertical())
                 {
-                    DrawLevelLine(tickPen, tick, 75, 25);
+                    DrawLevelLine(tickPen, (float)tick, 75, 25);
                     var alignment = new Alignment { Horizontal = HorizontalAlignment.LeftToPoint, Vertical = VerticalAlignment.CenteredToPoint };
-                    _drawingArea.DrawString(tick.ToString(), font, textColor, new PointF(75, percentTick), alignment);
+                    _drawingArea.DrawString(tick.ToString(textFormat), font, textColor, new PointF(75, percentTick), alignment);
                 }
                 else
                 {
-                    DrawLevelLine(tickPen, tick, 0, 25);
+                    DrawLevelLine(tickPen, (float)tick, 0, 25);
                     var alignment = new Alignment { Horizontal = HorizontalAlignment.CenteredToPoint, Vertical = VerticalAlignment.AbovePoint };
-                    _drawingArea.DrawString(tick.ToString(), font, textColor, new PointF(percentTick, 100), alignment);
+                    _drawingArea.DrawString(tick.ToString(textFormat), font, textColor, new PointF(percentTick, 100), alignment);
                 }
 
             }

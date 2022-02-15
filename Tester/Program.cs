@@ -31,7 +31,6 @@ namespace Tester
                 {
                     Height = 300,
                     Width = 500,
-                    DecimalDigits = 1,
                     ShowAxis = true,
                     ShowLegend = true,
                     AxisMode = EAxisMode.All,
@@ -44,9 +43,9 @@ namespace Tester
                     new SingleCategoryData
                     {
                         Name = "Dec-21",
-                        Measured = 23,
-                        Target = 20,
-                        Ranks = new List<float?> { null, 5, 12, 17, null },
+                        Measured = 5.5f,
+                        Target = 5.6f,
+                        Ranks = new List<float?> { null, 2, 4, 6, null },
                     },
                     new SingleCategoryData
                     {

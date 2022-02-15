@@ -17,7 +17,6 @@ namespace EasyChartLib
 
         [JsonProperty("show_Legend")]
         public bool ShowLegend { get; set; }
-        public int DecimalDigits { get; set; }
         public int RanksAlpha { get; set; }
         public List<string> RankColors { get; set; }
         public List<string> RankNames { get; set; }
