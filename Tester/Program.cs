@@ -34,9 +34,9 @@ namespace Tester
                     ShowAxis = true,
                     ShowLegend = true,
                     AxisMode = EAxisMode.All,
-                    RanksAlpha = 128,
+                    RanksAlpha = 255,
                     FontSize = 8.5f, //SystemFonts.DefaultFont.Size,
-                    RankColors = new List<string> { "AACCFF", "00FF44", "FFFF00", "FF0000" },
+                    RankColors = new List<string> { "b4c6e7", "c6e0b4", "ffe699", "f8cbad" },
                 },
                 Categories = new List<SingleCategoryData>
                 {
