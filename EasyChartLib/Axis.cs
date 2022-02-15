@@ -28,8 +28,7 @@ namespace EasyChartLib
 
             if (MinValue < 0 && minValue >= 0) MinValue = 0;
 
-            var axisTextFormat = GetAxisTextFormat();
-            var maxDigits = allValues.Max(value => value.ToString().Length);
+            var maxDigits = allValues.Max(value => AutoRound(value).ToString().Length);
             var textLengthPercentage = isVerticalAxis ? digitSizeInPercentage.Height : digitSizeInPercentage.Width * maxDigits;
             SpaceNeeded = isVerticalAxis ? digitSizeInPercentage.Width * maxDigits : digitSizeInPercentage.Height;
             TickLength = CalcTickSize(MinValue, MaxValue, textLengthPercentage);

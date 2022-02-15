@@ -35,7 +35,7 @@ namespace Tester
                     ShowLegend = true,
                     AxisMode = EAxisMode.All,
                     RanksAlpha = 128,
-                    FontSize = 10, //SystemFonts.DefaultFont.Size,
+                    FontSize = 8.5f, //SystemFonts.DefaultFont.Size,
                     RankColors = new List<string> { "AACCFF", "00FF44", "FFFF00", "FF0000" },
                 },
                 Categories = new List<SingleCategoryData>
@@ -43,9 +43,9 @@ namespace Tester
                     new SingleCategoryData
                     {
                         Name = "Dec-21",
-                        Measured = 5.5f,
-                        Target = 5.6f,
-                        Ranks = new List<float?> { null, 2, 4, 6, null },
+                        Measured = 5f,
+                        Target = 7f,
+                        //Ranks = new List<float?> { null, 2, 4, 6, null },
                     },
                     new SingleCategoryData
                     {
