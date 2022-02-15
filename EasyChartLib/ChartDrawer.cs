@@ -59,7 +59,7 @@ namespace EasyChartLib
 
         internal void DrawAxis(Pen tickPen, Font font, Brush textColor)
         {
-            var tickSize = _axis.TickSize;
+            var tickSize = _axis.TickLength;
             var minValue = (float)Math.Ceiling(_axis.MinValue / tickSize) * tickSize;
             var maxValue = (float)Math.Floor(_axis.MaxValue / tickSize) * tickSize;
 

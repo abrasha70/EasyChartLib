@@ -21,15 +21,16 @@ namespace EasyChartLib
             imageArea.FillRectange(Brushes.White, 0, 0, 100, 100);
 
             var font = new Font(SystemFonts.DefaultFont.FontFamily, settings.FontSize);
-            var textSize = imageArea.MeasureString("Text", font);
-            var textHeight = textSize.Height;
+            var digitSize = imageArea.MeasureString("0", font);
+            var textHeight = digitSize.Height;
 
-            var axisTextWidth = textSize.Width;
-            var areas = imageArea.HorizontalSplit(axisTextWidth * 1.5f);
+            var axis = new Axis(settings, categories, digitSize, true);
+
+            var axiesLength = axis.SpaceNeeded;
+            var areas = imageArea.HorizontalSplit(axiesLength);
             var axisArea = areas[0];
             var chartsArea = areas[1];
 
-            var axis = GetAxis(categories, textHeight, settings.AxisMode);
             var categoryHeight = textHeight * 1.5f;
 
             if (settings.ShowAxis)
@@ -73,14 +74,14 @@ namespace EasyChartLib
             imageArea.FillRectange(Brushes.White, 0, 0, 100, 100);
 
             var font = new Font(SystemFonts.DefaultFont.FontFamily, settings.FontSize);
-            var textSize = imageArea.MeasureString("Text", font);
-            var axisTextHeight = textSize.Height;
+            var digitSize = imageArea.MeasureString("0", font);
+            var axisTextHeight = digitSize.Height;
 
             var areas = imageArea.VerticalSplit(100 - axisTextHeight * 1.5f);
             var chartsArea = areas[0];
             var axisArea = areas[1];
 
-            var axis = GetAxis(chartData, axisTextHeight, settings.AxisMode);
+            var axis = new Axis(settings, chartData, digitSize, false);
             if (settings.ShowAxis)
             {
                 var axisDrawer = new ChartDrawer(axisArea, axis, ChartDrawer.EDirection.LeftToRight);
@@ -146,153 +147,11 @@ namespace EasyChartLib
 
 
 
-        private Axis GetAxis(SingleCategoryData category, float textLengthPercentage, EAxisMode axisMode)
-        {
-            var categories = new List<SingleCategoryData> { category };
-            return GetAxis(categories, textLengthPercentage, axisMode);
-        }
-
-        private Axis GetAxis(List<SingleCategoryData> categories, float textLengthPercentage, EAxisMode axisMode)
-        {
-            var axis = new Axis();
-            var allValues = GetRelevantValues(categories, axisMode);
-            var minValue = allValues.Min();
-            var maxValue = allValues.Max();
-            var gap = maxValue - minValue;
-            axis.MinValue = minValue - gap * 0.1f;
-            axis.MaxValue = maxValue + gap * 0.1f;
-
-            if (axis.MinValue < 0 && minValue >= 0) axis.MinValue = 0;
-
-            axis.TickSize = CalcTickSize(axis.MinValue, axis.MaxValue, textLengthPercentage);
-            return axis;
-        }
-
-        private float CalcTickSize(float minValue, float maxValue, float textLengthPercentage)
-        {
-            var maxAmountOfTicks = (float)Math.Floor(100f / (textLengthPercentage * 2f));
-            var gap = maxValue - minValue;
-            var tickSize = gap / maxAmountOfTicks;
-            tickSize = AutoRound(tickSize);
-
-            return tickSize;
-        }
-
-        private float AutoRound(float value)
-        {
-            var power = Math.Round(Math.Log10(value));
-            var round1 = 1f * (float)Math.Pow(10, power);
-            var round2 = 2f * (float)Math.Pow(10, power);
-            var round5 = 5f * (float)Math.Pow(10, power);
-            var round10 = 10f * (float)Math.Pow(10, power);
-            if (value < round1) return round1;
-            if (value < round2) return round2;
-            if (value < round5) return round5;
-            return round10;
-        }
 
 
 
-        private List<float> GetRelevantValues(List<SingleCategoryData> categories, EAxisMode axisMode)
-        {
-            switch (axisMode)
-            {
-                case EAxisMode.All:
-                    return GetAllValues(categories);
-                case EAxisMode.Focused:
-                    return GetFocusedValues(categories);
-                case EAxisMode.FocusedAndAround:
-                    return GetFocusedAndAroundValues(categories);
-                case EAxisMode.FocusedAndNearby:
-                    return GetFocusedAndNearbyValues(categories);
-                default:
-                    return null;
-            }
-        }
-
-        private List<float> GetAllValues(List<SingleCategoryData> categories)
-        {
-            var measured = categories.Select(category => category.Measured);
-            var targets = categories.Select(category => category.Target);
-            var rankMins = categories.SelectMany(category => category.GetRanksAsRanges().Select(rank => rank.FromValue));
-            var rankMaxs = categories.SelectMany(category => category.GetRanksAsRanges().Select(rank => rank.ToValue));
-
-            var unified = measured.Union(targets).Union(rankMins).Union(rankMaxs);
-            var result = unified.Where(item => item.HasValue).Select(item => item.Value);
-
-            return result.ToList();
-        }
-
-        private List<float> GetFocusedValues(List<SingleCategoryData> categories)
-        {
-            var measuredValues = categories.Select(category => category.Measured);
-            var targetValues = categories.Select(category => category.Target);
-
-            var unified = measuredValues.Union(targetValues);
-            var result = unified.Where(item => item.HasValue).Select(item => item.Value);
-
-            return result.ToList();
-        }
-
-        private List<float> GetFocusedAndAroundValues(List<SingleCategoryData> categories)
-        {
-            var measured = categories.Select(category => category.Measured);
-            var targets = categories.Select(category => category.Target);
-            var surroundRanks = categories.SelectMany(
-                category => category.GetRanksAsRanges().Where(
-                    rank =>
-                    IsBetween(category.Measured, rank.FromValue, rank.ToValue) ||
-                    IsBetween(category.Target, rank.FromValue, rank.ToValue)
-                    )
-                );
-            var rankMins = surroundRanks.Select(rank => rank.FromValue);
-            var rankMaxs = surroundRanks.Select(rank => rank.ToValue);
-
-            var unified = measured.Union(targets).Union(rankMins).Union(rankMaxs);
-            var result = unified.Where(item => item.HasValue).Select(item => item.Value);
-
-            return result.ToList();
-        }
-
-        private List<float> GetFocusedAndNearbyValues(List<SingleCategoryData> categories)
-        {
-            var allValues = new List<float?>();
-
-            foreach (var category in categories)
-            {
-                allValues.Add(category.Measured);
-                allValues.Add(category.Target);
-                var ranks = category.GetRanksAsRanges();
-                for (int rankIndex = 0; rankIndex < ranks.Count; rankIndex++)
-                {
-                    var rank = ranks[rankIndex];
-                    var prev = rankIndex > 0 ? ranks[rankIndex - 1] : null;
-                    var next = rankIndex < ranks.Count - 1 ? ranks[rankIndex + 1] : null;
-
-                    var overlapCurrent = IsBetween(category.Measured, rank.FromValue, rank.ToValue) || IsBetween(category.Target, rank.FromValue, rank.ToValue);
-                    var overlapPrev = prev != null && (IsBetween(category.Measured, prev.FromValue, prev.ToValue) || IsBetween(category.Target, prev.FromValue, prev.ToValue));
-                    var overlapNext = next != null && (IsBetween(category.Measured, next.FromValue, next.ToValue) || IsBetween(category.Target, next.FromValue, next.ToValue));
-
-                    if (overlapCurrent || overlapPrev || overlapNext)
-                    {
-                        allValues.Add(rank.FromValue);
-                        allValues.Add(rank.ToValue);
-                    }
-                }
-            }
-            var result = allValues.Where(item => item.HasValue).Select(item => item.Value).Distinct();
-
-            return result.ToList();
-        }
 
 
-        private bool IsBetween(float? testedValue, float? minValue, float? maxValue)
-        {
-            if (!testedValue.HasValue) return false;
-            if (maxValue.HasValue && testedValue > maxValue) return false;
-            if (minValue.HasValue && testedValue < minValue) return false;
-            return true;
-        }
 
         private Color HexToColor(string colorHex, int alpha = 255)
         {
