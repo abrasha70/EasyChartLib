@@ -154,6 +154,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\clinicchartapi - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\clinicchartapi - ReadOnly - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\clinicchartapi - Web Deploy.pubxml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EasyChartLib\EasyChartLib.csproj">
