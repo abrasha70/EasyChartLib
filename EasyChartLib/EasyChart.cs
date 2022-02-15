@@ -29,13 +29,21 @@ namespace EasyChartLib
             var axisArea = areas[0];
             var chartsArea = areas[1];
 
-
-            var categoryHeight = textHeight * 1.5f;
-            axisArea = axisArea.CreateSubArea(0, 0, 100, 100 - categoryHeight);
-
             var axis = GetAxis(categories, textHeight, settings.AxisMode);
-            var axisDrawer = new ChartDrawer(axisArea, axis, ChartDrawer.EDirection.BottomToTop);
-            axisDrawer.DrawAxis(Pens.Black, font, Brushes.Black);
+            var categoryHeight = textHeight * 1.5f;
+
+            if (settings.ShowAxis)
+            {
+                axisArea = axisArea.CreateSubArea(0, 0, 100, 100 - categoryHeight);
+
+                var axisDrawer = new ChartDrawer(axisArea, axis, ChartDrawer.EDirection.BottomToTop);
+                axisDrawer.DrawAxis(Pens.Black, font, Brushes.Black);
+            }
+            else
+            {
+                chartsArea = imageArea;
+            }
+
 
             var categoryAreas = chartsArea.HorizontalMultiSplit(categories.Count);
             for (int index = 0; index < categories.Count; index++)
@@ -73,8 +81,15 @@ namespace EasyChartLib
             var axisArea = areas[1];
 
             var axis = GetAxis(chartData, axisTextHeight, settings.AxisMode);
-            var axisDrawer = new ChartDrawer(axisArea, axis, ChartDrawer.EDirection.LeftToRight);
-            axisDrawer.DrawAxis(Pens.Black, font, Brushes.Black);
+            if (settings.ShowAxis)
+            {
+                var axisDrawer = new ChartDrawer(axisArea, axis, ChartDrawer.EDirection.LeftToRight);
+                axisDrawer.DrawAxis(Pens.Black, font, Brushes.Black);
+            }
+            else
+            {
+                chartsArea = imageArea;
+            }
 
             DrawCategoryGraphs(settings, chartsArea, chartData, axis, ChartDrawer.EDirection.LeftToRight);
 
