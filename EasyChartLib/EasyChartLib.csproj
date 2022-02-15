@@ -50,7 +50,6 @@
     <Compile Include="ChartSettings.cs" />
     <Compile Include="EasyChart.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="LoadedSettings.cs" />
     <Compile Include="PercentageGraphics\ActualMargin.cs" />
     <Compile Include="PercentageGraphics\Alignment.cs" />
     <Compile Include="PercentageGraphics\PercentGraphics_drawing.cs" />

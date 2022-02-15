@@ -12,16 +12,16 @@ namespace EasyChartLib
 {
     public class EasyChart
     {
-        public Image GenerateMultiRankChart(ChartSettings rawSettings, List<SingleCategoryData> categories)
+        public Image GenerateMultiRankChart(ChartSettings settings, List<SingleCategoryData> categories)
         {
-            var settings = new LoadedSettings(rawSettings);
-            var bmp = new Bitmap(settings.Raw.Width, settings.Raw.Height);
+            var bmp = new Bitmap(settings.Width, settings.Height);
 
             var margin = new ActualMargin(0, 0, 1, 1);
             var imageArea = new PercentGraphics(bmp, margin);
             imageArea.FillRectange(Brushes.White, 0, 0, 100, 100);
 
-            var textSize = imageArea.MeasureString("Text", settings.Font);
+            var font = new Font(SystemFonts.DefaultFont.FontFamily, settings.FontSize);
+            var textSize = imageArea.MeasureString("Text", font);
             var textHeight = textSize.Height;
 
             var axisTextWidth = textSize.Width;
@@ -33,9 +33,9 @@ namespace EasyChartLib
             var categoryHeight = textHeight * 1.5f;
             axisArea = axisArea.CreateSubArea(0, 0, 100, 100 - categoryHeight);
 
-            var axis = GetAxis(categories, textHeight, settings.Raw.AxisMode);
+            var axis = GetAxis(categories, textHeight, settings.AxisMode);
             var axisDrawer = new ChartDrawer(axisArea, axis, ChartDrawer.EDirection.BottomToTop);
-            axisDrawer.DrawAxis(Pens.Black, settings.Font, Brushes.Black);
+            axisDrawer.DrawAxis(Pens.Black, font, Brushes.Black);
 
             var categoryAreas = chartsArea.HorizontalMultiSplit(categories.Count);
             for (int index = 0; index < categories.Count; index++)
@@ -56,25 +56,25 @@ namespace EasyChartLib
         }
 
 
-        public Image GenerateSingleRankChart(ChartSettings rawSettings, SingleCategoryData chartData)
+        public Image GenerateSingleRankChart(ChartSettings settings, SingleCategoryData chartData)
         {
-            var settings = new LoadedSettings(rawSettings);
-            var bmp = new Bitmap(settings.Raw.Width, settings.Raw.Height);
+            var bmp = new Bitmap(settings.Width, settings.Height);
 
             var margin = new ActualMargin(0, 0, 1, 1);
             var imageArea = new PercentGraphics(bmp, margin);
             imageArea.FillRectange(Brushes.White, 0, 0, 100, 100);
 
-            var textSize = imageArea.MeasureString("Text", settings.Font);
+            var font = new Font(SystemFonts.DefaultFont.FontFamily, settings.FontSize);
+            var textSize = imageArea.MeasureString("Text", font);
             var axisTextHeight = textSize.Height;
 
             var areas = imageArea.VerticalSplit(100 - axisTextHeight * 1.5f);
             var chartsArea = areas[0];
             var axisArea = areas[1];
 
-            var axis = GetAxis(chartData, axisTextHeight, settings.Raw.AxisMode);
+            var axis = GetAxis(chartData, axisTextHeight, settings.AxisMode);
             var axisDrawer = new ChartDrawer(axisArea, axis, ChartDrawer.EDirection.LeftToRight);
-            axisDrawer.DrawAxis(Pens.Black, settings.Font, Brushes.Black);
+            axisDrawer.DrawAxis(Pens.Black, font, Brushes.Black);
 
             DrawCategoryGraphs(settings, chartsArea, chartData, axis, ChartDrawer.EDirection.LeftToRight);
 
@@ -90,7 +90,7 @@ namespace EasyChartLib
 
 
 
-        private void DrawCategoryGraphs(LoadedSettings settings, PercentGraphics graphArea, SingleCategoryData categoryData, Axis axis, ChartDrawer.EDirection direction)
+        private void DrawCategoryGraphs(ChartSettings settings, PercentGraphics graphArea, SingleCategoryData categoryData, Axis axis, ChartDrawer.EDirection direction)
         {
             var drawer = new ChartDrawer(graphArea, axis, direction);
 
@@ -99,8 +99,8 @@ namespace EasyChartLib
             foreach (var rank in rankRanges)
             {
                 //var colorHex = settings.RankDefs[rank.Key].ColorHex;
-                var colorHex = settings.Raw.RankColors[rank.Index];
-                var brush = HexToBrush(colorHex, settings.Raw.RanksAlpha);
+                var colorHex = settings.RankColors[rank.Index];
+                var brush = HexToBrush(colorHex, settings.RanksAlpha);
                 drawer.FillChartRange(brush, rank.FromValue, rank.ToValue);
             }
 
@@ -122,10 +122,11 @@ namespace EasyChartLib
 
 
 
-        private void DrawCategoryLabels(LoadedSettings settings, PercentGraphics labelsArea, SingleCategoryData categoryData)
+        private void DrawCategoryLabels(ChartSettings settings, PercentGraphics labelsArea, SingleCategoryData categoryData)
         {
             var alignment = new Alignment { Horizontal = HorizontalAlignment.CenteredToPoint, Vertical = VerticalAlignment.CenteredToPoint };
-            labelsArea.DrawString(categoryData.Name, settings.Font, Brushes.Black, new PointF(50, 50), alignment);
+            var font = new Font(SystemFonts.DefaultFont.FontFamily, settings.FontSize);
+            labelsArea.DrawString(categoryData.Name, font, Brushes.Black, new PointF(50, 50), alignment);
         }
 
 
