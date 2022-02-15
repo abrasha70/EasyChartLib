@@ -70,6 +70,7 @@ namespace EasyChartLib
 
                 //crop:
                 if (tick < minValue || tick > maxValue) continue;
+                if (percentTick < 5 || percentTick > 95) continue;
 
 
                 if (IsVertical())

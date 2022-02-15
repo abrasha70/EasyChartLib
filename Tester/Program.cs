@@ -45,7 +45,7 @@ namespace Tester
                         Name = "Dec-21",
                         Measured = 5f,
                         Target = 7f,
-                        //Ranks = new List<float?> { null, 2, 4, 6, null },
+                        Ranks = new List<float?> { null, 2, 4, 6, null },
                     },
                     new SingleCategoryData
                     {
