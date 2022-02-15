@@ -19,7 +19,6 @@ namespace ChartApi.Utils
                 {
                     Height = 300,
                     Width = 500,
-                    DecimalDigits = 1,
                     ShowAxis = true,
                     ShowLegend = true,
                     AxisMode = EAxisMode.All,
