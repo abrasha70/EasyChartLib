@@ -94,6 +94,8 @@ namespace EasyChartLib
 
             DrawCategoryGraphs(settings, chartsArea, chartData, axis, ChartDrawer.EDirection.LeftToRight);
 
+            chartsArea.DrawRectangle(Pens.Black, 0, 0, 100, 100);
+
             return bmp;
         }
 
