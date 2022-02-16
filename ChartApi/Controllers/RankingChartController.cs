@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -33,12 +34,23 @@ namespace ChartApi.Controllers
 
             //overwrite settings:
             var settingsParameters = GetRequestParameters(_reservedParameters);
-            var jSettings = JToken.FromObject(chartSettings);
+            var jsonPropToProp = JsonPropToProp(typeof(ChartSettings));
             foreach (var parameter in settingsParameters)
             {
-                if (jSettings[parameter.Key] != null) jSettings[parameter.Key] = parameter.Value;
+                var propName = parameter.Key;
+                if (!jsonPropToProp.ContainsKey(propName)) continue;
+                var settingsProperty = jsonPropToProp[propName];
+
+                if (settingsProperty.PropertyType.IsClass)
+                {
+                    var value = JsonConvert.DeserializeObject(parameter.Value, settingsProperty.PropertyType);
+                    settingsProperty.SetValue(chartSettings, value);
+                }
+                else
+                {
+                    settingsProperty.SetValue(chartSettings, parameter.Value);
+                }
             }
-            chartSettings = jSettings.ToObject<ChartSettings>();
 
             var requestParameters = GetRequestParameters();
             var chartData = new SingleCategoryData()
@@ -101,6 +113,13 @@ namespace ChartApi.Controllers
         }
 
 
+
+        private Dictionary<string, PropertyInfo> JsonPropToProp(Type type)
+        {
+            var settingsProperties = type.GetProperties();
+            var jsonPropToProp = settingsProperties.ToDictionary(prop => prop.CustomAttributes.Where(att => att.AttributeType == typeof(JsonPropertyAttribute)).Select(att => (string)att.ConstructorArguments[0].Value).First());
+            return jsonPropToProp;
+        }
 
     }
 }
