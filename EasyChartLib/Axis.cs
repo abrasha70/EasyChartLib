@@ -57,7 +57,7 @@ namespace EasyChartLib
 
         private float AutoRound(float value)
         {
-            var power10 = Math.Round(Math.Log10(value));
+            var power10 = Math.Floor(Math.Log10(value));
             var round1 = 1f * (float)Math.Pow(10, power10);
             var round2 = 2f * (float)Math.Pow(10, power10);
             var round5 = 5f * (float)Math.Pow(10, power10);
