@@ -131,6 +131,11 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Utils\ChartTemplateManager.cs" />
     <Compile Include="Controllers\RankingChartController.cs" />
     <Compile Include="Global.asax.cs">
@@ -157,6 +162,10 @@
     <None Include="Properties\PublishProfiles\clinicchartapi - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\clinicchartapi - ReadOnly - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\clinicchartapi - Web Deploy.pubxml" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EasyChartLib\EasyChartLib.csproj">

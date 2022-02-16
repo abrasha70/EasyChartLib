@@ -1,7 +1,10 @@
-﻿using EasyChartLib;
+﻿using ChartApi.Properties;
+using EasyChartLib;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Net;
 
 namespace ChartApi.Utils
 {
@@ -13,23 +16,19 @@ namespace ChartApi.Utils
 
         public ChartSettings Load(string templateName)
         {
-            if (templateName == "default")
+            try
             {
-                var settings = new ChartSettings()
-                {
-                    Height = 300,
-                    Width = 500,
-                    ShowAxis = true,
-                    ShowLegend = true,
-                    AxisMode = EAxisMode.All,
-                    RanksAlpha = 255,
-                    FontSize = 8.5f, //SystemFonts.DefaultFont.Size,
-                    RankColors = new List<string> { "b4c6e7", "c6e0b4", "ffe699", "f8cbad" },
-                };
-                return settings;
-            }
+                var templateUri = new Uri(Settings.Default.TemplatesRootUrl + "/" + templateName + ".json");
 
-            throw new KeyNotFoundException("Template could not be found");
+                var wb = new WebClient();
+                var templateJson = wb.DownloadString(templateUri);
+                var chartSettings = JsonConvert.DeserializeObject<ChartSettings>(templateJson);
+                return chartSettings;
+            }
+            catch (Exception)
+            {
+                throw new KeyNotFoundException("Template could not be found");
+            }
         }
 
 

@@ -20,8 +20,8 @@ namespace ChartApi.Controllers
         private const string TEMPALTE_PARAMETER = "template";
         private const string MEASURED_PARAMETER = "measured";
         private const string TARGET_PARAMETER = "target";
-        private const string RANKS_PARAMETER = "ranks";
-        private readonly List<string> _reservedParameters = new List<string> { TEMPALTE_PARAMETER, MEASURED_PARAMETER, TARGET_PARAMETER, RANKS_PARAMETER };
+        private const string RANK_LEVELS_PARAMETER = "rank_levels";
+        private readonly List<string> _reservedParameters = new List<string> { TEMPALTE_PARAMETER, MEASURED_PARAMETER, TARGET_PARAMETER, RANK_LEVELS_PARAMETER };
 
 
         [HttpGet, HttpPost, HttpOptions, EnableCors(origins: "*", headers: "*", methods: "*")]
@@ -44,7 +44,7 @@ namespace ChartApi.Controllers
             {
                 Measured = GetFloatFromParams(requestParameters, MEASURED_PARAMETER),
                 Target = GetFloatFromParams(requestParameters, TARGET_PARAMETER),
-                RankLevels = GetObjectFromParams<List<float?>>(requestParameters, RANKS_PARAMETER),
+                RankLevels = GetObjectFromParams<List<float?>>(requestParameters, RANK_LEVELS_PARAMETER),
             };
 
             var chart = new EasyChart();
