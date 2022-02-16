@@ -21,7 +21,7 @@ namespace EasyChartLib
         [JsonProperty("ranks_alpha")]
         public int RanksAlpha { get; set; }
 
-        [JsonProperty("rank_colos")]
+        [JsonProperty("rank_colors")]
         public List<string> RankColors { get; set; }
 
         [JsonProperty("rank_names")]
