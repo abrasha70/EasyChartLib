@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
@@ -25,10 +26,10 @@ namespace ChartApi.Controllers
 
 
         [HttpGet, HttpPost, HttpOptions, EnableCors(origins: "*", headers: "*", methods: "*")]
-        public HttpResponseMessage SingleCategory(string template = "default")
+        public async Task<HttpResponseMessage> SingleCategory(string template = "default")
         {
             var templateManager = new ChartTemplateManager();
-            var chartSettings = templateManager.Load(template);
+            var chartSettings = await templateManager.Load(template);
 
             //overwrite settings:
             var settingsParameters = GetRequestParameters(_reservedParameters);

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace ChartApi.Utils
 {
@@ -14,14 +15,14 @@ namespace ChartApi.Utils
         {
         }
 
-        public ChartSettings Load(string templateName)
+        public async Task<ChartSettings> Load(string templateName)
         {
             try
             {
                 var templateUri = new Uri(Settings.Default.TemplatesRootUrl + "/" + templateName + ".json");
 
                 var wb = new WebClient();
-                var templateJson = wb.DownloadString(templateUri);
+                var templateJson = await wb.DownloadStringTaskAsync(templateUri);
                 var chartSettings = JsonConvert.DeserializeObject<ChartSettings>(templateJson);
                 return chartSettings;
             }
