@@ -113,22 +113,25 @@ namespace EasyChartLib
             var drawer = new ChartDrawer(graphArea, axis, direction);
 
             //Ranks:
-            var rankRanges = categoryData.GetRanksAsRanges();
-            foreach (var rank in rankRanges)
+            if (settings.RankColors != null)
             {
-                //var colorHex = settings.RankDefs[rank.Key].ColorHex;
-                var colorHex = settings.RankColors[rank.Index];
-                var brush = HexToBrush(colorHex, settings.RanksAlpha);
-                drawer.FillChartRange(brush, rank.FromValue, rank.ToValue);
+                var rankRanges = categoryData.GetRanksAsRanges();
+                foreach (var rank in rankRanges)
+                {
+                    var colorHex = settings.RankColors[rank.Index];
+                    var brush = HexToBrush(colorHex, settings.RanksAlpha);
+                    drawer.FillChartRange(brush, rank.FromValue, rank.ToValue);
+                }
             }
 
-            //Value:
+
+            //Measured Value:
             if (categoryData.Measured.HasValue)
             {
                 drawer.FillChartColumn(Brushes.Navy, categoryData.Measured.Value, 25);
             }
 
-            //Target:
+            //Target Value:
             if (categoryData.Target.HasValue)
             {
                 drawer.DrawLevelLine(new Pen(Color.Red, 2), categoryData.Target.Value, 50);
