@@ -17,10 +17,20 @@ namespace EasyChartLib
 
         [JsonProperty("show_Legend")]
         public bool ShowLegend { get; set; }
+
+        [JsonProperty("ranks_alpha")]
         public int RanksAlpha { get; set; }
+
+        [JsonProperty("rank_colos")]
         public List<string> RankColors { get; set; }
+
+        [JsonProperty("rank_names")]
         public List<string> RankNames { get; set; }
+
+        [JsonProperty("font_size")]
         public float FontSize { get; set; }
+
+        [JsonProperty("axis_mode")]
         public EAxisMode AxisMode { get; set; }
     }
 }

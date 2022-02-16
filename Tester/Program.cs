@@ -36,7 +36,8 @@ namespace Tester
                     AxisMode = EAxisMode.All,
                     RanksAlpha = 255,
                     FontSize = 8.5f, //SystemFonts.DefaultFont.Size,
-                    RankColors = new List<string> { "b4c6e7", "c6e0b4", "ffe699", "f8cbad" },
+                    RankColors = new List<string> { "b4c6e7", "c6e0b4", "ffe699", "f8cbad" },   //can be overwrite from the client
+                    RankNames = new List<string> { "low", "normal", "high", "very high" },      //can be overwrite from the client
                 },
                 Categories = new List<SingleCategoryData>
                 {
@@ -45,21 +46,21 @@ namespace Tester
                         Name = "Dec-21",
                         Measured = 5f,
                         Target = 7f,
-                        Ranks = new List<float?> { null, 2, 4, 6, null },
+                        RankLevels = new List<float?> { null, 2, 4, 6, null },
                     },
                     new SingleCategoryData
                     {
                         Name = "Jan-22",
                         Measured = 20.5f,
                         Target = 18,
-                        Ranks = new List<float?> { null, 5, 12, 16, null },
+                        RankLevels = new List<float?> { null, 5, 12, 16, null },
                     },
                     new SingleCategoryData
                     {
                         Name = "Feb-22",
                         Measured = 16.5f,
                         Target = 14,
-                        Ranks = new List<float?> { null, 5, 12, 16, null },
+                        RankLevels = new List<float?> { null, 5, 12, 16, null },
                     },
                 },
             };

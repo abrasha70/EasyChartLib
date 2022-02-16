@@ -44,7 +44,7 @@ namespace ChartApi.Controllers
             {
                 Measured = GetFloatFromParams(requestParameters, MEASURED_PARAMETER),
                 Target = GetFloatFromParams(requestParameters, TARGET_PARAMETER),
-                Ranks = GetObjectFromParams<List<float?>>(requestParameters, RANKS_PARAMETER),
+                RankLevels = GetObjectFromParams<List<float?>>(requestParameters, RANKS_PARAMETER),
             };
 
             var chart = new EasyChart();

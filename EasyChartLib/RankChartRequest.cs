@@ -18,21 +18,21 @@ namespace EasyChartLib
         public string Name { get; set; }
         public float? Measured { get; set; }
         public float? Target { get; set; }
-        public List<float?> Ranks { get; set; }
+        public List<float?> RankLevels { get; set; }
 
 
         internal List<RankRange> GetRanksAsRanges()
         {
-            if (Ranks == null) return new List<RankRange>();
+            if (RankLevels == null) return new List<RankRange>();
 
             var result = new List<RankRange>();
-            for (int index = 1; index < Ranks.Count; index++)
+            for (int index = 1; index < RankLevels.Count; index++)
             {
                 var newDef = new RankRange
                 {
                     Index = index - 1,
-                    FromValue = Ranks[index - 1],
-                    ToValue = Ranks[index],
+                    FromValue = RankLevels[index - 1],
+                    ToValue = RankLevels[index],
                 };
                 result.Add(newDef);
             }
