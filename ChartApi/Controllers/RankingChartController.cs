@@ -27,7 +27,7 @@ namespace ChartApi.Controllers
 
 
         [HttpGet, HttpPost, HttpOptions, EnableCors(origins: "*", headers: "*", methods: "*")]
-        public async Task<HttpResponseMessage> SingleCategory(string template = "default")
+        public async Task<HttpResponseMessage> SingleCategory(string template = null)
         {
             var templateManager = new ChartTemplateManager();
             var chartSettings = await templateManager.Load(template);

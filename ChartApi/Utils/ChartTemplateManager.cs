@@ -17,6 +17,23 @@ namespace ChartApi.Utils
 
         public async Task<ChartSettings> Load(string templateName)
         {
+            if (templateName == null)
+            {
+                var defaultTemplate = new ChartSettings
+                {
+                    Height = 300,
+                    Width = 500,
+                    ShowAxis = true,
+                    ShowLegend = false,
+                    RanksAlpha = 128,
+                    RankColors = null,
+                    RankNames = null,
+                    FontSize = 10,
+                    AxisMode = EAxisMode.All,
+                };
+                return defaultTemplate;
+            }
+
             try
             {
                 var templateUri = new Uri(Settings.Default.TemplatesRootUrl + "/" + templateName + ".json");
