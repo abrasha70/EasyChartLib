@@ -48,7 +48,7 @@ namespace ChartApi.Controllers
                 }
                 else
                 {
-                    settingsProperty.SetValue(chartSettings, parameter.Value);
+                    settingsProperty.SetValue(chartSettings, Convert.ChangeType(parameter.Value, settingsProperty.PropertyType));
                 }
             }
 
