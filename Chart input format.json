@@ -1,0 +1,58 @@
+{
+	"settings": {
+		"width": 400,
+		"height": 300,
+		"show_target": "only_last",
+		"show_axis": true
+	},
+	"ranks_defs": [
+		{
+			"key": "low",
+			"name": "Low",
+			"color": "blue",
+			"display_order": 1
+		},
+		{
+			"key": "norm",
+			"name": "Normal",
+			"color": "green",
+			"display_order": 2
+		},
+		{
+			"key": "high",
+			"name": "High",
+			"color": "yellow",
+			"display_order": 3
+		},
+		{
+			"key": "higher",
+			"name": "Very High",
+			"color": "red",
+			"display_order": 4
+		}
+	],
+	"periods": [
+		{
+			"name": "Jan-22",
+			"value": 23,
+			"target": 17,
+			"ranks": [
+				{
+					"key": "low",
+					"min_val": 0,
+					"max_val": 5
+				},
+				{
+					"key": "norm",
+					"min_val": 5,
+					"max_val": 12
+				},
+				{
+					"key": "high",
+					"min_val": 12,
+					"max_val": 17
+				}
+			]
+		}
+	]
+}
