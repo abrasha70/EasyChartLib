@@ -160,7 +160,7 @@ namespace EasyChartLib
 
         private Color HexToColor(string colorHex, int alpha = 255)
         {
-            int argb = Int32.Parse(colorHex, NumberStyles.HexNumber);
+            int argb = Int32.Parse(colorHex.Replace("#", ""), NumberStyles.HexNumber);
             var color = Color.FromArgb(argb);
             color = Color.FromArgb(alpha, color);
             return color;
