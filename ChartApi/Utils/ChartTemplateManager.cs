@@ -15,11 +15,11 @@ namespace ChartApi.Utils
         {
         }
 
-        public async Task<ChartSettings> Load(string templateName)
+        public async Task<RanksChartSettings> Load(string templateName)
         {
             if (templateName == null)
             {
-                var defaultTemplate = new ChartSettings
+                var defaultTemplate = new RanksChartSettings
                 {
                     Height = 300,
                     Width = 500,
@@ -29,7 +29,7 @@ namespace ChartApi.Utils
                     RankColors = null,
                     RankNames = null,
                     FontSize = 10,
-                    AxisMode = EAxisMode.All,
+                    ZoomMode = EZoomMode.All,
                 };
                 return defaultTemplate;
             }
@@ -40,7 +40,7 @@ namespace ChartApi.Utils
 
                 var wb = new WebClient();
                 var templateJson = await wb.DownloadStringTaskAsync(templateUri);
-                var chartSettings = JsonConvert.DeserializeObject<ChartSettings>(templateJson);
+                var chartSettings = JsonConvert.DeserializeObject<RanksChartSettings>(templateJson);
                 return chartSettings;
             }
             catch (Exception)

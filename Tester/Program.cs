@@ -27,13 +27,13 @@ namespace Tester
         {
             var request = new RankChartRequest()
             {
-                Settings = new ChartSettings
+                Settings = new RanksChartSettings
                 {
                     Height = 90,
                     Width = 500,
                     ShowAxis = true,
                     ShowLegend = true,
-                    AxisMode = EAxisMode.FocusedAndNearby,
+                    ZoomMode = EZoomMode.FocusedAndNearby,
                     RanksAlpha = 255,
                     FontSize = 10f, //SystemFonts.DefaultFont.Size,
                     //RankColors = new List<string> { "b4c6e7", "c6e0b4", "ffe699", "f8cbad" },   //can be overwrite from the client

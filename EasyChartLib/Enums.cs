@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EasyChartLib
 {
-    public enum EAxisMode
+    public enum EZoomMode
     {
         All,
         Focused,

@@ -7,7 +7,7 @@ namespace EasyChartLib
 {
     public partial class RankChartRequest
     {
-        public ChartSettings Settings { get; set; }
+        public RanksChartSettings Settings { get; set; }
 
         public List<SingleCategoryData> Categories { get; set; }
 
@@ -38,6 +38,13 @@ namespace EasyChartLib
             }
             return result;
         }
+    }
+
+    public class LmsMeasurement
+    {
+        public float LookupValue { get; set; }
+
+        public float ComparedValue { get; set; }
     }
 
 
