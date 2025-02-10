@@ -5,7 +5,7 @@ using System.Web;
 
 namespace EasyChartLib
 {
-    public partial class RankChartRequest
+    public partial class RankChartParameters
     {
         public RanksChartSettings Settings { get; set; }
 
@@ -42,9 +42,9 @@ namespace EasyChartLib
 
     public class LmsMeasurement
     {
-        public float LookupValue { get; set; }
+        public float Lookup { get; set; }
 
-        public float ComparedValue { get; set; }
+        public float Value { get; set; }
     }
 
 

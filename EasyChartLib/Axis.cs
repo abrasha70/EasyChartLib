@@ -7,18 +7,14 @@ namespace EasyChartLib
 {
     internal class Axis
     {
-        private readonly ChartSettings _settings;
-
         public float MinValue { get; private set; }
         public float MaxValue { get; private set; }
         public float TickLength { get; private set; }
         public int DecimalDigits { get; private set; }
         public float SpaceNeeded { get; private set; }
 
-        public Axis(ChartSettings settings, IEnumerable<float> relevantValues, SizeF digitSizeInPercentage, bool isVerticalAxis)
+        public Axis(IEnumerable<float> relevantValues, SizeF digitSizeInPercentage, bool isVerticalAxis)
         {
-            _settings = settings;
-
             var minValue = relevantValues.Min();
             var maxValue = relevantValues.Max();
             var gap = maxValue - minValue;
@@ -34,10 +30,21 @@ namespace EasyChartLib
             DecimalDigits = GetDecimalDigits(TickLength);
         }
 
-        public Axis (ChartSettings settings, float relevantValue, SizeF digitSizeInPercentage, bool isVerticalAxis)
-            : this (settings, new [] { relevantValue }, digitSizeInPercentage, isVerticalAxis)
+        public Axis (float relevantValue, SizeF digitSizeInPercentage, bool isVerticalAxis)
+            : this (new [] { relevantValue }, digitSizeInPercentage, isVerticalAxis)
         {
         }
+
+
+        public float GetValueInPecentage(float value, bool isInverted = false)
+        {
+            float percentage = (value - MinValue) / (MaxValue - MinValue) * 100;
+
+            if (isInverted) percentage = 100 - percentage;
+
+            return percentage;
+        }
+
 
 
 

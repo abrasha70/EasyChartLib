@@ -4,7 +4,9 @@ using System.Drawing;
 
 namespace EasyChartLib
 {
-    internal class ChartDrawer
+
+
+    internal class RankChartDrawer
     {
         public enum EDirection
         {
@@ -15,13 +17,13 @@ namespace EasyChartLib
         }
 
         private readonly PercentGraphics _drawingArea;
-        private readonly Axis _axis;
+        private readonly Axis _valuesAxis;
         private readonly EDirection _direction;
 
-        public ChartDrawer(PercentGraphics drawingArea, Axis axis, EDirection direction = EDirection.BottomToTop)
+        public RankChartDrawer(PercentGraphics drawingArea, Axis valuesAxis, EDirection direction = EDirection.BottomToTop)
         {
             _drawingArea = drawingArea;
-            _axis = axis;
+            _valuesAxis = valuesAxis;
             _direction = direction;
         }
 
@@ -39,7 +41,7 @@ namespace EasyChartLib
 
         public void DrawLevelLine(Pen pen, float value, float lineSize = 100)
         {
-            var valuePercentage = GetValueInPecentage(value, 0);
+            var valuePercentage = _valuesAxis.GetValueInPecentage(value, IsInverted());
 
             //crop:
             if (valuePercentage < 0 || valuePercentage > 100) return;
@@ -47,52 +49,12 @@ namespace EasyChartLib
             var columnMarginSize = 100 - lineSize;
             DrawRotatingLine(pen, columnMarginSize / 2, valuePercentage, 100 - columnMarginSize / 2, valuePercentage);
         }
-        public void DrawLevelLine(Pen pen, float value, float offset, float lineSize)
-        {
-            var valuePercentage = GetValueInPecentage(value, 0);
 
-            //crop:
-            if (valuePercentage < 0 || valuePercentage > 100) return;
-
-            DrawRotatingLine(pen, offset, valuePercentage, offset + lineSize, valuePercentage);
-        }
-
-        internal void DrawAxis(Pen tickPen, Font font, Brush textColor)
-        {
-            var tickSize = (decimal)_axis.TickLength;
-            var minValue = (decimal)Math.Ceiling((decimal)_axis.MinValue / tickSize) * tickSize;
-            var maxValue = (decimal)Math.Floor((decimal)_axis.MaxValue / tickSize) * tickSize;
-            var textFormat = _axis.GetAxisTextFormat();
-
-            for (decimal tick = minValue; tick <= maxValue; tick += tickSize)
-            {
-                var percentTick = GetValueInPecentage((float)tick, 0);
-
-                //crop:
-                if (tick < minValue || tick > maxValue) continue;
-                if (percentTick < 5 || percentTick > 95) continue;
-
-
-                if (IsVertical())
-                {
-                    DrawLevelLine(tickPen, (float)tick, 75, 25);
-                    var alignment = new Alignment { Horizontal = HorizontalAlignment.LeftToPoint, Vertical = VerticalAlignment.CenteredToPoint };
-                    _drawingArea.DrawString(tick.ToString(textFormat), font, textColor, new PointF(75, percentTick), alignment);
-                }
-                else
-                {
-                    DrawLevelLine(tickPen, (float)tick, 0, 25);
-                    var alignment = new Alignment { Horizontal = HorizontalAlignment.CenteredToPoint, Vertical = VerticalAlignment.AbovePoint };
-                    _drawingArea.DrawString(tick.ToString(textFormat), font, textColor, new PointF(percentTick, 100), alignment);
-                }
-
-            }
-        }
 
         private void FillChartColumnArea(Brush brush, float? fromValue, float? toValue, float columnSize)
         {
-            var fromPercentage = GetValueInPecentage(fromValue, 0);
-            var toPercentage = GetValueInPecentage(toValue, 100);
+            var fromPercentage = _valuesAxis.GetValueInPecentage(fromValue ?? 0, IsInverted());
+            var toPercentage = _valuesAxis.GetValueInPecentage(toValue ?? 100, IsInverted());
 
             var minPercentage = Math.Min(fromPercentage, toPercentage);
             var maxPercentage = Math.Max(fromPercentage, toPercentage);
@@ -159,22 +121,6 @@ namespace EasyChartLib
         //}
 
 
-
-        private float GetValueInPecentage(float? value, float nullPercentage)
-        {
-
-            var isInverted = IsInverted();
-
-            float percentage;
-            if (value == null)
-                percentage = nullPercentage;
-            else
-                percentage = (value.Value - _axis.MinValue) / (_axis.MaxValue - _axis.MinValue) * 100;
-
-            if (isInverted) percentage = 100 - percentage;
-
-            return percentage;
-        }
 
 
         //private float GetScale()

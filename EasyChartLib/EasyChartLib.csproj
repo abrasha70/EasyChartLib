@@ -46,7 +46,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Axis.cs" />
-    <Compile Include="ChartDrawer.cs" />
+    <Compile Include="AxisDrawer.cs" />
+    <Compile Include="DirectionObj.cs" />
+    <Compile Include="EDirection.cs" />
+    <Compile Include="XyChartDrawer.cs" />
+    <Compile Include="RankChartDrawer.cs" />
     <Compile Include="ChartSettings.cs" />
     <Compile Include="EasyChart.cs" />
     <Compile Include="Enums.cs" />
@@ -55,7 +59,7 @@
     <Compile Include="PercentageGraphics\PercentGraphics_drawing.cs" />
     <Compile Include="PercentageGraphics\PercentGraphics_init.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RankChartRequest.cs" />
+    <Compile Include="RankChartParameters.cs" />
     <Compile Include="PercentageGraphics\PercentGraphics_areas.cs" />
     <Compile Include="RankRange.cs" />
   </ItemGroup>

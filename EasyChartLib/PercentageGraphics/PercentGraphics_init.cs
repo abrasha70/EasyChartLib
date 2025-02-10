@@ -32,7 +32,7 @@ namespace EasyChartLib.PercentageGraphics
         {
             _bmp = bmp;
             _gfx = Graphics.FromImage(bmp);
-            _workingArea = new RectangleF(margin.Left, margin.Top, bmp.Width - margin.GetWidthMargin(), bmp.Height - margin.GetHeightMargin());
+            _workingArea = margin.GetMarginedRectangle(bmp.Size);
         }
 
 

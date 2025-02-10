@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static EasyChartLib.RankChartRequest;
+using static EasyChartLib.RankChartParameters;
 
 namespace EasyChartLib
 {
@@ -25,7 +25,7 @@ namespace EasyChartLib
             var textHeight = digitSize.Height;
 
             var relevantValues = GetRelevantValues(categories, settings.ZoomMode);
-            var axis = new Axis(settings, relevantValues, digitSize, true);
+            var axis = new Axis(relevantValues, digitSize, true);
 
             var axiesLength = axis.SpaceNeeded;
             var areas = imageArea.HorizontalSplit(axiesLength);
@@ -38,7 +38,7 @@ namespace EasyChartLib
             {
                 axisArea = axisArea.CreateSubArea(0, 0, 100, 100 - categoryHeight);
 
-                var axisDrawer = new ChartDrawer(axisArea, axis, ChartDrawer.EDirection.BottomToTop);
+                var axisDrawer = new AxisDrawer(axisArea, axis, EDirection.BottomToTop);
                 axisDrawer.DrawAxis(Pens.Black, font, Brushes.Black);
             }
             else
@@ -57,7 +57,7 @@ namespace EasyChartLib
                 var graphArea = periodParts[0];
                 var labelsArea = periodParts[1];
 
-                DrawCategoryGraphs(settings, graphArea, categoryData, axis, ChartDrawer.EDirection.BottomToTop);
+                DrawCategoryGraphs(settings, graphArea, categoryData, axis, RankChartDrawer.EDirection.BottomToTop);
 
                 DrawCategoryLabels(settings, labelsArea, categoryData);
             }
@@ -84,10 +84,10 @@ namespace EasyChartLib
 
             var relevantValues = GetRelevantValues(chartData, settings.ZoomMode);
 
-            var axis = new Axis(settings, relevantValues, digitSize, false);
+            var axis = new Axis(relevantValues, digitSize, false);
             if (settings.ShowAxis)
             {
-                var axisDrawer = new ChartDrawer(axisArea, axis, ChartDrawer.EDirection.LeftToRight);
+                var axisDrawer = new AxisDrawer(axisArea, axis, EDirection.LeftToRight);
                 axisDrawer.DrawAxis(Pens.Black, font, Brushes.Black);
             }
             else
@@ -95,9 +95,9 @@ namespace EasyChartLib
                 chartsArea = imageArea;
             }
 
-            DrawCategoryGraphs(settings, chartsArea, chartData, axis, ChartDrawer.EDirection.LeftToRight);
+            DrawCategoryGraphs(settings, chartsArea, chartData, axis, RankChartDrawer.EDirection.LeftToRight);
 
-            chartsArea.DrawRectangle(Pens.Black, 0, 0, 100, 100);
+            chartsArea.DrawBorder(Pens.Black);
 
             return bmp;
         }
@@ -120,16 +120,21 @@ namespace EasyChartLib
             var chartsArea = areas[0];
             var axisArea = areas[1];
 
-            var lookupAxis = new Axis(settings, measurement.LookupValue, digitSize, false);
+            var lookupAxis = new Axis(measurement.Lookup, digitSize, false);
+            var valuesAxis = new Axis(measurement.Value, digitSize, true);
+
             if (settings.ShowAxis)
             {
-                var axisDrawer = new ChartDrawer(axisArea, lookupAxis, ChartDrawer.EDirection.LeftToRight);
+                var axisDrawer = new AxisDrawer(axisArea, lookupAxis, EDirection.LeftToRight);
                 axisDrawer.DrawAxis(Pens.Black, font, Brushes.Black);
             }
             else
             {
                 chartsArea = imageArea;
             }
+
+            var xyChart = new XyChartDrawer(chartsArea, lookupAxis, valuesAxis);
+            xyChart.DrawPoint(measurement.Lookup, measurement.Value, Brushes.Navy);
 
             //DrawCategoryGraphs(settings, chartsArea, chartData, lookupAxis, ChartDrawer.EDirection.LeftToRight);
 
@@ -138,7 +143,7 @@ namespace EasyChartLib
             //DrawLmsGraphs
             //DrawLmsMeasurements
 
-            chartsArea.DrawRectangle(Pens.Black, 0, 0, 100, 100);
+            chartsArea.DrawBorder(Pens.Black);
 
             return bmp;
         }
@@ -151,9 +156,9 @@ namespace EasyChartLib
 
 
 
-        private void DrawCategoryGraphs(RanksChartSettings settings, PercentGraphics graphArea, SingleCategoryData categoryData, Axis axis, ChartDrawer.EDirection direction)
+        private void DrawCategoryGraphs(RanksChartSettings settings, PercentGraphics graphArea, SingleCategoryData categoryData, Axis axis, RankChartDrawer.EDirection direction)
         {
-            var drawer = new ChartDrawer(graphArea, axis, direction);
+            var drawer = new RankChartDrawer(graphArea, axis, direction);
 
             //Ranks:
             if (settings.RankColors != null)

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Printing;
 
 namespace EasyChartLib.PercentageGraphics
 {
@@ -32,6 +34,12 @@ namespace EasyChartLib.PercentageGraphics
         public int GetHeightMargin()
         {
             return Top + Bottom;
+        }
+
+        public RectangleF GetMarginedRectangle(Size size)
+        {
+            var rect = new RectangleF(Left, Top, size.Width - GetWidthMargin(), size.Height - GetHeightMargin());
+            return rect;
         }
     }
 }

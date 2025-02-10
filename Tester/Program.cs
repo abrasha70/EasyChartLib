@@ -23,9 +23,9 @@ namespace Tester
         }
 
 
-        private static RankChartRequest GetSampleRequest()
+        private static RankChartParameters GetSampleRequest()
         {
-            var request = new RankChartRequest()
+            var request = new RankChartParameters()
             {
                 Settings = new RanksChartSettings
                 {

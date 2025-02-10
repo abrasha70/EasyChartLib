@@ -4,8 +4,6 @@ using System.Linq;
 
 namespace EasyChartLib.PercentageGraphics
 {
-
-
     internal partial class PercentGraphics
     {
 
@@ -45,9 +43,17 @@ namespace EasyChartLib.PercentageGraphics
         }
         public void FillRectange(Brush brush, float x, float y, float width, float height)
         {
-            var actualRect = new RectangleF(x, y, width, height);
-            FillRectange(brush, actualRect);
+            var rect = new RectangleF(x, y, width, height);
+            FillRectange(brush, rect);
         }
+
+        public void FillCircle(Brush brush, float x, float y, float radius)
+        {
+            var rect = new RectangleF(x - radius, y - radius, radius * 2, radius * 2);
+            var actualRect = GetActualRect(rect);
+            _gfx.FillEllipse(brush, actualRect);
+        }
+
 
         public void DrawRectangle(Pen pen, RectangleF rect)
         {
@@ -70,8 +76,13 @@ namespace EasyChartLib.PercentageGraphics
 
         public void DrawRectangle(Pen pen, float x, float y, float width, float height)
         {
-            var actualRect = new RectangleF(x, y, width, height);
-            DrawRectangle(pen, actualRect);
+            var rect = new RectangleF(x, y, width, height);
+            DrawRectangle(pen, rect);
+        }
+
+        public void DrawBorder(Pen pen)
+        {
+            DrawRectangle(pen, 0, 0, 100, 100);
         }
 
 
