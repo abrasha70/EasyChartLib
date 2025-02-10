@@ -10,19 +10,28 @@ namespace EasyChartLib
         private readonly Axis _axis;
         private readonly DirectionObj _direction;
 
-        internal AxisDrawer(PercentGraphics drawingArea, Axis axis, EDirection direction)
+        public float TickLength { get; private set; }
+        public int DecimalDigits { get; private set; }
+
+
+        internal AxisDrawer(PercentGraphics drawingArea, Axis axis, EDirection direction, SizeF digitSizeInPercentage)
         {
             _drawingArea = drawingArea;
             _axis = axis;
             _direction = new DirectionObj(direction);
+
+            var maxDigits = AutoRound(axis.MaxValue).ToString().Length;
+            var textLengthPercentage = _direction.IsVertical ? digitSizeInPercentage.Height : digitSizeInPercentage.Width * maxDigits;
+            TickLength = CalcTickSize(axis.MinValue, axis.MaxValue, textLengthPercentage);
+            DecimalDigits = GetDecimalDigits(TickLength);
         }
 
         internal void DrawAxis(Pen tickPen, Font font, Brush textColor)
         {
-            var tickSize = (decimal)_axis.TickLength;
+            var tickSize = (decimal)TickLength;
             var minValue = (decimal)Math.Ceiling((decimal)_axis.MinValue / tickSize) * tickSize;
             var maxValue = (decimal)Math.Floor((decimal)_axis.MaxValue / tickSize) * tickSize;
-            var textFormat = _axis.GetAxisTextFormat();
+            var textFormat = GetAxisTextFormat();
 
             for (decimal tick = minValue; tick <= maxValue; tick += tickSize)
             {
@@ -71,5 +80,47 @@ namespace EasyChartLib
         }
 
 
+
+
+
+
+
+        private float CalcTickSize(float minValue, float maxValue, float textLengthPercentage)
+        {
+            var maxAmountOfTicks = (float)Math.Floor(100f / (textLengthPercentage * 2f));
+            var gap = maxValue - minValue;
+            var tickSize = gap / maxAmountOfTicks;
+
+            var roundedTickSize = AutoRound(tickSize);
+            return roundedTickSize;
+        }
+
+        private float AutoRound(float value)
+        {
+            var power10 = Math.Floor(Math.Log10(value));
+            var round1 = 1f * (float)Math.Pow(10, power10);
+            var round2 = 2f * (float)Math.Pow(10, power10);
+            var round5 = 5f * (float)Math.Pow(10, power10);
+            var round10 = 10f * (float)Math.Pow(10, power10);
+            if (value < round1) return round1;
+            if (value < round2) return round2;
+            if (value < round5) return round5;
+            return round10;
+        }
+
+        private int GetDecimalDigits(float tickLength)
+        {
+            var power10 = Math.Log10(tickLength);
+            if (power10 >= 0) return 0;
+            return (int)Math.Ceiling(Math.Abs(power10));
+        }
+
+
+
+        public string GetAxisTextFormat()
+        {
+            if (DecimalDigits == 0) return "0";
+            return "0." + new string('0', DecimalDigits);
+        }
     }
 }

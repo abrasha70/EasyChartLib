@@ -21,13 +21,15 @@ namespace EasyChartLib
             imageArea.FillRectange(Brushes.White, 0, 0, 100, 100);
 
             var font = new Font(SystemFonts.DefaultFont.FontFamily, settings.FontSize);
-            var digitSize = imageArea.MeasureString("0", font);
-            var textHeight = digitSize.Height;
+            var digitSizeInPercentage = imageArea.MeasureString("0", font);
+            var textHeight = digitSizeInPercentage.Height;
 
             var relevantValues = GetRelevantValues(categories, settings.ZoomMode);
-            var axis = new Axis(relevantValues, digitSize, true);
+            var axis = new Axis(relevantValues);
 
-            var axiesLength = axis.SpaceNeeded;
+            var maxDigits = relevantValues.Max(value => AutoRound(value).ToString().Length);
+            var spaceNeeded = digitSizeInPercentage.Width * maxDigits;
+            var axiesLength = spaceNeeded;
             var areas = imageArea.HorizontalSplit(axiesLength);
             var axisArea = areas[0];
             var chartsArea = areas[1];
@@ -38,7 +40,7 @@ namespace EasyChartLib
             {
                 axisArea = axisArea.CreateSubArea(0, 0, 100, 100 - categoryHeight);
 
-                var axisDrawer = new AxisDrawer(axisArea, axis, EDirection.BottomToTop);
+                var axisDrawer = new AxisDrawer(axisArea, axis, EDirection.BottomToTop, digitSizeInPercentage);
                 axisDrawer.DrawAxis(Pens.Black, font, Brushes.Black);
             }
             else
@@ -75,8 +77,8 @@ namespace EasyChartLib
             imageArea.FillRectange(Brushes.White, 0, 0, 100, 100);
 
             var font = new Font(SystemFonts.DefaultFont.FontFamily, settings.FontSize);
-            var digitSize = imageArea.MeasureString("0", font);
-            var axisTextHeight = digitSize.Height;
+            var digitSizeInPercentage = imageArea.MeasureString("0", font);
+            var axisTextHeight = digitSizeInPercentage.Height;
 
             var areas = imageArea.VerticalSplit(100 - axisTextHeight * 1.5f);
             var chartsArea = areas[0];
@@ -84,10 +86,10 @@ namespace EasyChartLib
 
             var relevantValues = GetRelevantValues(chartData, settings.ZoomMode);
 
-            var axis = new Axis(relevantValues, digitSize, false);
+            var axis = new Axis(relevantValues);
             if (settings.ShowAxis)
             {
-                var axisDrawer = new AxisDrawer(axisArea, axis, EDirection.LeftToRight);
+                var axisDrawer = new AxisDrawer(axisArea, axis, EDirection.LeftToRight, digitSizeInPercentage);
                 axisDrawer.DrawAxis(Pens.Black, font, Brushes.Black);
             }
             else
@@ -120,12 +122,12 @@ namespace EasyChartLib
             var chartsArea = areas[0];
             var axisArea = areas[1];
 
-            var lookupAxis = new Axis(measurement.Lookup, digitSize, false);
-            var valuesAxis = new Axis(measurement.Value, digitSize, true);
+            var lookupAxis = new Axis(measurement.Lookup);
+            var valuesAxis = new Axis(measurement.Value);
 
             if (settings.ShowAxis)
             {
-                var axisDrawer = new AxisDrawer(axisArea, lookupAxis, EDirection.LeftToRight);
+                var axisDrawer = new AxisDrawer(axisArea, lookupAxis, EDirection.LeftToRight, digitSize);
                 axisDrawer.DrawAxis(Pens.Black, font, Brushes.Black);
             }
             else
@@ -152,7 +154,18 @@ namespace EasyChartLib
 
 
 
-
+        private float AutoRound(float value)
+        {
+            var power10 = Math.Floor(Math.Log10(value));
+            var round1 = 1f * (float)Math.Pow(10, power10);
+            var round2 = 2f * (float)Math.Pow(10, power10);
+            var round5 = 5f * (float)Math.Pow(10, power10);
+            var round10 = 10f * (float)Math.Pow(10, power10);
+            if (value < round1) return round1;
+            if (value < round2) return round2;
+            if (value < round5) return round5;
+            return round10;
+        }
 
 
 
