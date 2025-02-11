@@ -40,12 +40,4 @@ namespace EasyChartLib
         }
     }
 
-    public class LmsMeasurement
-    {
-        public float Lookup { get; set; }
-
-        public float Value { get; set; }
-    }
-
-
 }

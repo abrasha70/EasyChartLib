@@ -1,9 +1,12 @@
-﻿using EasyChartLib.PercentageGraphics;
+﻿using EasyChartLib.Model;
+using EasyChartLib.PercentageGraphics;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using static EasyChartLib.RankChartParameters;
@@ -15,10 +18,7 @@ namespace EasyChartLib
         public Image GenerateMultiRankChart(RanksChartSettings settings, List<SingleCategoryData> categories)
         {
             var bmp = new Bitmap(settings.Width, settings.Height);
-
-            var margin = new ActualMargin(0, 0, 1, 1);
-            var imageArea = new PercentGraphics(bmp, margin);
-            imageArea.FillRectange(Brushes.White, 0, 0, 100, 100);
+            var imageArea = CreateImageArea(bmp);
 
             var font = new Font(SystemFonts.DefaultFont.FontFamily, settings.FontSize);
             var digitSizeInPercentage = imageArea.MeasureString("0", font);
@@ -71,10 +71,7 @@ namespace EasyChartLib
         public Image GenerateSingleRankChart(RanksChartSettings settings, SingleCategoryData chartData)
         {
             var bmp = new Bitmap(settings.Width, settings.Height);
-
-            var margin = new ActualMargin(0, 0, 1, 1);
-            var imageArea = new PercentGraphics(bmp, margin);
-            imageArea.FillRectange(Brushes.White, 0, 0, 100, 100);
+            var imageArea = CreateImageArea(bmp);
 
             var font = new Font(SystemFonts.DefaultFont.FontFamily, settings.FontSize);
             var digitSizeInPercentage = imageArea.MeasureString("0", font);
@@ -106,13 +103,10 @@ namespace EasyChartLib
 
 
 
-        public Image GenerateLmsChart(LmsChartSettings settings, LmsMeasurement measurement)
+        public Image GenerateLmsChart(LmsChartSettings settings, List<LmsMeasurement> measurements)
         {
             var bmp = new Bitmap(settings.Width, settings.Height);
-
-            var margin = new ActualMargin(0, 0, 1, 1);
-            var imageArea = new PercentGraphics(bmp, margin);
-            imageArea.FillRectange(Brushes.White, 0, 0, 100, 100);
+            var imageArea = CreateImageArea(bmp);
 
             var font = new Font(SystemFonts.DefaultFont.FontFamily, settings.FontSize);
             var digitSize = imageArea.MeasureString("0", font);
@@ -122,8 +116,8 @@ namespace EasyChartLib
             var chartsArea = areas[0];
             var axisArea = areas[1];
 
-            var lookupAxis = new Axis(measurement.Lookup);
-            var valuesAxis = new Axis(measurement.Value);
+            var lookupAxis = new Axis(measurements.Select(m => m.Lookup));
+            var valuesAxis = new Axis(measurements.Select(m => m.MeasuredValue));
 
             if (settings.ShowAxis)
             {
@@ -136,23 +130,52 @@ namespace EasyChartLib
             }
 
             var xyChart = new XyChartDrawer(chartsArea, lookupAxis, valuesAxis);
-            xyChart.DrawPoint(measurement.Lookup, measurement.Value, Brushes.Navy);
-
-            //DrawCategoryGraphs(settings, chartsArea, chartData, lookupAxis, ChartDrawer.EDirection.LeftToRight);
 
             //TODO:
-            //GetLMSFile
+            var lmsStats = GetLmsFile(settings.SourceKey, settings.SegmentKey);
+            var filtered = lmsStats
+                .Where(lmsStat => lmsStat.Lookup > lookupAxis.MinValue && lmsStat.Lookup < lookupAxis.MaxValue)
+                .OrderBy(lmsStat => lmsStat.Lookup);
+
+            var prev = filtered.FirstOrDefault();
+            foreach(var lmsStat in filtered)
+            {
+                if (lmsStat == prev) continue;
+
+                xyChart.DrawLine((float)prev.Lookup, (float)prev.M, (float)lmsStat.Lookup, (float)lmsStat.M, Pens.Green);
+
+                prev = lmsStat;
+            }
             //DrawLmsGraphs
             //DrawLmsMeasurements
+            foreach(var measurement in measurements)
+            {
+                xyChart.DrawPoint(measurement.Lookup, measurement.MeasuredValue, Brushes.Navy);
+            }
+
 
             chartsArea.DrawBorder(Pens.Black);
 
             return bmp;
         }
 
+        private List<LmsModel> GetLmsFile(string sourceKey, string segmentKey)
+        {
+            var hc = new HttpClient();
+            var uri = new Uri($"https://bioclinic.blob.core.windows.net/static/lms/{sourceKey}/{segmentKey}.json");
+            var json = hc.GetStringAsync(uri).Result;
+            var obj = JsonConvert.DeserializeObject<LmsFileModel>(json);
+            return obj.Lms;
+        }
 
 
-
+        private static PercentGraphics CreateImageArea(Bitmap bmp)
+        {
+            var margin = new ActualMargin(0, 0, 1, 1);
+            var imageArea = new PercentGraphics(bmp, margin);
+            imageArea.FillRectange(Brushes.White, 0, 0, 100, 100);
+            return imageArea;
+        }
 
         private float AutoRound(float value)
         {

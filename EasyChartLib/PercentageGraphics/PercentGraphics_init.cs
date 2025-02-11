@@ -10,14 +10,14 @@ namespace EasyChartLib.PercentageGraphics
         private readonly Graphics _gfx;
         private readonly RectangleF _workingArea;
 
-        public float ScaleWidth { get; set; } = 100f;
-        public float ScaleHeight { get; set; } = 100f;
+        public float FullScale { get; set; } = 100f;
 
 
         public PercentGraphics(Bitmap bmp, RectangleF workingArea)
         {
             _bmp = bmp;
             _gfx = Graphics.FromImage(bmp);
+            _gfx.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             _workingArea = workingArea;
         }
 
@@ -25,6 +25,7 @@ namespace EasyChartLib.PercentageGraphics
         {
             _bmp = bmp;
             _gfx = Graphics.FromImage(bmp);
+            _gfx.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             _workingArea = new Rectangle(0, 0, bmp.Width, bmp.Height);
         }
 
@@ -32,6 +33,7 @@ namespace EasyChartLib.PercentageGraphics
         {
             _bmp = bmp;
             _gfx = Graphics.FromImage(bmp);
+            _gfx.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             _workingArea = margin.GetMarginedRectangle(bmp.Size);
         }
 
@@ -48,25 +50,42 @@ namespace EasyChartLib.PercentageGraphics
 
         private PointF GetActualPoint(PointF point)
         {
-            var actualX = _workingArea.Left + _workingArea.Width * point.X / ScaleWidth;
-            var actualY = _workingArea.Top + _workingArea.Height * point.Y / ScaleHeight;
+            return GetActualPoint(point.X, point.Y);
+        }
+
+        private PointF GetActualPoint(float x, float y)
+        {
+            var actualX = _workingArea.Left + _workingArea.Width * x / FullScale;
+            var actualY = _workingArea.Top + _workingArea.Height * y / FullScale;
             return new PointF(actualX, actualY);
         }
 
         private SizeF GetActualSize(SizeF size)
         {
-            var actualWidth = _workingArea.Width * size.Width / ScaleWidth;
-            var actualHeight = _workingArea.Height * size.Height / ScaleHeight;
+            var actualWidth = GetActualWidth(size.Width);
+            var actualHeight = GetActualHeight(size.Height);
             var actualSize = new SizeF(actualWidth, actualHeight);
             return actualSize;
         }
 
         private SizeF GetRelativeSize(SizeF size)
         {
-            var relWidth = size.Width / _workingArea.Width * ScaleWidth;
-            var relHeight = size.Height / _workingArea.Height * ScaleHeight;
+            var relWidth = size.Width / _workingArea.Width * FullScale;
+            var relHeight = size.Height / _workingArea.Height * FullScale;
             var relSize = new SizeF(relWidth, relHeight);
             return relSize;
         }
+
+        private float GetActualWidth(float width)
+        {
+            return _workingArea.Width * width / FullScale;
+        }
+
+        private float GetActualHeight(float height)
+        {
+            return _workingArea.Height * height / FullScale;
+        }
+
+
     }
 }

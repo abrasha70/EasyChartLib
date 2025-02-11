@@ -28,20 +28,20 @@ namespace EasyChartLib
         public void DrawPoint(float lookup, float value, Brush brush)
         {
             var lookupPercent = _lookupAxis.GetValueInPecentage(lookup, IsInverted());
-            var valuePercent = _valuesAxis.GetValueInPecentage(value);
+            var valuePercent = _valuesAxis.GetValueInPecentage(value, true);
 
-            _drawingArea.FillCircle(brush, lookupPercent, valuePercent, 0.5f);
+            _drawingArea.DrawPoint(new Pen(brush, 3), lookupPercent, valuePercent);
         }
 
         public void DrawLine(float fromLookup, float fromValue, float toLookup, float toValue, Pen pen)
         {
             var p1 = new PointF(
                 _lookupAxis.GetValueInPecentage(fromLookup, IsInverted()),
-                _valuesAxis.GetValueInPecentage(fromValue));
+                _valuesAxis.GetValueInPecentage(fromValue, true));
 
             var p2 = new PointF(
                 _lookupAxis.GetValueInPecentage(toLookup, IsInverted()),
-                _valuesAxis.GetValueInPecentage(toValue));
+                _valuesAxis.GetValueInPecentage(toValue, true));
 
             _drawingArea.DrawLine(pen, p1, p2);
         }

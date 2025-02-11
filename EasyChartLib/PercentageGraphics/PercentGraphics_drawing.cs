@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
@@ -47,11 +48,13 @@ namespace EasyChartLib.PercentageGraphics
             FillRectange(brush, rect);
         }
 
-        public void FillCircle(Brush brush, float x, float y, float radius)
+        public void DrawPoint(Pen pen, float x, float y)
         {
-            var rect = new RectangleF(x - radius, y - radius, radius * 2, radius * 2);
-            var actualRect = GetActualRect(rect);
-            _gfx.FillEllipse(brush, actualRect);
+            var actualRadius = pen.Width;
+            var actualPoint = GetActualPoint(x, y);
+            var actualRect = new RectangleF(actualPoint.X - actualRadius, actualPoint.Y - actualRadius, actualRadius, actualRadius);
+
+            _gfx.FillEllipse(pen.Brush, actualRect);
         }
 
 

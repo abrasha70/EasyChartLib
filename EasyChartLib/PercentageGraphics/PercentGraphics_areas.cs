@@ -23,27 +23,27 @@ namespace EasyChartLib.PercentageGraphics
         public List<PercentGraphics> HorizontalSplit(float splitSize)
         {
             var parts = new List<PercentGraphics>();
-            parts.Add(CreateSubArea(0, 0, splitSize, ScaleHeight));
-            parts.Add(CreateSubArea(splitSize, 0, ScaleWidth - splitSize, ScaleHeight));
+            parts.Add(CreateSubArea(0, 0, splitSize, FullScale));
+            parts.Add(CreateSubArea(splitSize, 0, FullScale - splitSize, FullScale));
             return parts;
         }
 
         public List<PercentGraphics> HorizontalMultiSplit(int count)
         {
-            var partWidth = ScaleWidth / count;
-            var parts = Enumerable.Range(0, count).Select((index) => CreateSubArea(index * partWidth, 0, partWidth, ScaleHeight));
+            var partWidth = FullScale / count;
+            var parts = Enumerable.Range(0, count).Select((index) => CreateSubArea(index * partWidth, 0, partWidth, FullScale));
             return parts.ToList();
         }
 
         public List<PercentGraphics> HorizontalMultiSplit(List<float?> lengthSizes)
         {
-            var resized = AutoResizeLengths(lengthSizes, ScaleWidth);
+            var resized = AutoResizeLengths(lengthSizes, FullScale);
 
             var parts = new List<PercentGraphics>();
             var position = 0f;
             foreach (var length in resized)
             {
-                var newPart = CreateSubArea(position, 0, length, ScaleHeight);
+                var newPart = CreateSubArea(position, 0, length, FullScale);
                 position += length;
                 parts.Add(newPart);
             }
@@ -52,30 +52,60 @@ namespace EasyChartLib.PercentageGraphics
         }
 
 
+        public List<PercentGraphics> SplitChunkInDirection(SizeF chunkSize, EDirection direction, out PercentGraphics chunkArea, out PercentGraphics remainingArea)
+        {
+            var directionObj = new DirectionObj(direction);
+            var chunkLength = directionObj.IsVertical ? chunkSize.Height : chunkSize.Width;
+
+            return SplitChunkInDirection(chunkLength, direction, out chunkArea, out remainingArea);
+        }
+
+        public List<PercentGraphics> SplitChunkInDirection(float chunkLength, EDirection direction, out PercentGraphics chunkArea, out PercentGraphics remainingArea)
+        {
+            var directionObj = new DirectionObj(direction);
+
+            var chunkIndex = 0;
+            var remainingIndex = 1;
+
+            if (directionObj.IsReversed)
+            {
+                chunkLength = FullScale - chunkLength;
+                chunkIndex = 1;
+                remainingIndex = 0;
+            }
+
+            var areas = directionObj.IsVertical ? VerticalSplit(chunkLength) : HorizontalSplit(chunkLength);
+            chunkArea = areas[chunkIndex];
+            remainingArea = areas[remainingIndex];
+            return areas;
+        }
+
+
+
         public List<PercentGraphics> VerticalSplit(float splitSize)
         {
             var parts = new List<PercentGraphics>();
-            parts.Add(CreateSubArea(0, 0, ScaleWidth, splitSize));
-            parts.Add(CreateSubArea(0, splitSize, ScaleWidth, ScaleHeight - splitSize));
+            parts.Add(CreateSubArea(0, 0, FullScale, splitSize));
+            parts.Add(CreateSubArea(0, splitSize, FullScale, FullScale - splitSize));
             return parts;
         }
 
         public List<PercentGraphics> VerticalMultiSplit(int count)
         {
-            var partHeight = ScaleHeight / count;
-            var parts = Enumerable.Range(0, count).Select((index) => CreateSubArea(0, index * partHeight, ScaleWidth, partHeight));
+            var partHeight = FullScale / count;
+            var parts = Enumerable.Range(0, count).Select((index) => CreateSubArea(0, index * partHeight, FullScale, partHeight));
             return parts.ToList();
         }
 
         public List<PercentGraphics> VerticalMultiSplit(List<float?> lengthSizes)
         {
-            var resized = AutoResizeLengths(lengthSizes, ScaleHeight);
+            var resized = AutoResizeLengths(lengthSizes, FullScale);
 
             var parts = new List<PercentGraphics>();
             var position = 0f;
             foreach (var length in resized)
             {
-                var newPart = CreateSubArea(0, position, ScaleWidth, length);
+                var newPart = CreateSubArea(0, position, FullScale, length);
                 position += length;
                 parts.Add(newPart);
             }

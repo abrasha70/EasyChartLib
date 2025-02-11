@@ -13,7 +13,16 @@ namespace Tester
     {
         static void Main(string[] args)
         {
-            var request = GetSampleRequest();
+            //var request = GetSampleLmsChartRequest();
+            //var chart = new EasyChart();
+
+            //var image = chart.GenerateLmsChart(request.Settings, request.Measurements);
+            //image.Save("sample.png", ImageFormat.Png);
+            //System.Diagnostics.Process.Start("sample.png");
+
+
+
+            var request = GetSampleRankChartRequest();
             var chart = new EasyChart();
 
             //var image = chart.GenerateMultiRankChart(request.Settings, request.Categories);
@@ -22,10 +31,39 @@ namespace Tester
             System.Diagnostics.Process.Start("sample.png");
         }
 
-
-        private static RankChartParameters GetSampleRequest()
+        private static LmsChartParameters GetSampleLmsChartRequest()
         {
-            var request = new RankChartParameters()
+            var request = new LmsChartParameters
+            {
+                Settings = new LmsChartSettings
+                {
+                    Height = 300,
+                    Width = 500,
+                    ShowAxis = true,
+                    //ShowLegend = true,
+                    ZoomMode = EZoomMode.FocusedAndNearby,
+                    //RanksAlpha = 255,
+                    FontSize = 10f, //SystemFonts.DefaultFont.Size,
+                    SourceKey = "BmiForAgeLmsByWho",
+                    SegmentKey = "Boys0-5",
+                },
+                Measurements = new List<LmsMeasurement>
+                {
+                    new LmsMeasurement
+                    {
+                        Lookup = 90,
+                        MeasuredValue = 17,
+                    }
+                }
+            };
+
+            return request;
+        }
+
+
+        private static RankChartParameters GetSampleRankChartRequest()
+        {
+            var request = new RankChartParameters
             {
                 Settings = new RanksChartSettings
                 {

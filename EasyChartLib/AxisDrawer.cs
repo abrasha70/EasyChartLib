@@ -20,9 +20,9 @@ namespace EasyChartLib
             _axis = axis;
             _direction = new DirectionObj(direction);
 
-            var maxDigits = AutoRound(axis.MaxValue).ToString().Length;
+            var maxDigits = AutoRound((float)axis.MaxValue).ToString().Length;
             var textLengthPercentage = _direction.IsVertical ? digitSizeInPercentage.Height : digitSizeInPercentage.Width * maxDigits;
-            TickLength = CalcTickSize(axis.MinValue, axis.MaxValue, textLengthPercentage);
+            TickLength = CalcTickSize((float)axis.MinValue, (float)axis.MaxValue, textLengthPercentage);
             DecimalDigits = GetDecimalDigits(TickLength);
         }
 

@@ -40,7 +40,11 @@ namespace EasyChartLib
 
     public class LmsChartSettings : ChartSettings
     {
-        [JsonProperty("lms_file")]
-        public string LmsFile { get; set; }
+        [JsonProperty("source_key")]
+        public string SourceKey { get; set; }
+
+        [JsonProperty("segment_key")]
+        public string SegmentKey { get; set; }
     }
+
 }
