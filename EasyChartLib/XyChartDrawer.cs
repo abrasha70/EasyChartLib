@@ -1,6 +1,8 @@
 ﻿using EasyChartLib.PercentageGraphics;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Runtime;
 
 namespace EasyChartLib
@@ -82,7 +84,25 @@ namespace EasyChartLib
             DrawLineInPercentages(pen, fromPoint, toPoint);
         }
 
+        public void DrawLine(Pen pen, IEnumerable<PointF> points)
+        {
+            GetPointsInPercentage(points);
+        }
 
+        public void DrawAreaGraph(Brush brush, IEnumerable<PointF> points)
+        {
+            var firstPoint = points.First();
+            var lastPoint = points.Last();
+
+            var areaPoints = new List<PointF>();
+            areaPoints.Add(new PointF(firstPoint.X, 0));
+            areaPoints.AddRange(points);
+            areaPoints.Add(new PointF(lastPoint.X, 0));
+
+            var areaPercPoints = GetPointsInPercentage(areaPoints);
+
+            _chartArea.FillPolygon(brush, areaPercPoints);
+        }
 
 
         private void DrawLineInPercentages(Pen pen, PointF fromPoint, PointF toPoint)
@@ -95,6 +115,22 @@ namespace EasyChartLib
 
             _chartArea.DrawLine(pen, fromPoint, toPoint);
         }
+
+
+        private IEnumerable<PointF> GetPointsInPercentage(IEnumerable<PointF> points)
+        {
+            var percPoints = points.Select(p =>
+            {
+                var percX = _lookupAxis.GetValueInPecentage(p.X);
+                var percY = _valuesAxis.GetValueInPecentage(p.Y);
+                var percPoint = new PointF(percX, percY);
+                return percPoint;
+            }
+            );
+            return percPoints;
+        }
+
+
 
     }
 }

@@ -123,18 +123,22 @@ namespace EasyChartLib
                 .Where(lmsStat => lmsStat.Lookup > lookupAxis.MinValue && lmsStat.Lookup < lookupAxis.MaxValue)
                 .OrderBy(lmsStat => lmsStat.Lookup);
 
-            var prev = filtered.FirstOrDefault();
-            foreach(var lmsStat in filtered)
-            {
-                if (lmsStat == prev) continue;
+            //var prev = filtered.FirstOrDefault();
+            //foreach(var lmsStat in filtered)
+            //{
+            //    if (lmsStat == prev) continue;
 
-                xyChart.DrawLine(Pens.Green, (float)prev.Lookup, (float)prev.M, (float)lmsStat.Lookup, (float)lmsStat.M);
+            //    xyChart.DrawLine(Pens.Green, (float)prev.Lookup, (float)prev.M, (float)lmsStat.Lookup, (float)lmsStat.M);
 
-                prev = lmsStat;
-            }
+            //    prev = lmsStat;
+            //}
+
+            xyChart.DrawAreaGraph(Brushes.Green, filtered.Select(m => new PointF((float)m.Lookup, (float)m.M)));
+
+
             //DrawLmsGraphs
             //DrawLmsMeasurements
-            foreach(var measurement in measurements)
+            foreach (var measurement in measurements)
             {
                 xyChart.DrawPoint(Brushes.Navy, measurement.Lookup, measurement.MeasuredValue);
             }

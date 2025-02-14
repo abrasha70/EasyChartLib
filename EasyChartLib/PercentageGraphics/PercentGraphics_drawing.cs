@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 
 namespace EasyChartLib.PercentageGraphics
@@ -42,6 +43,20 @@ namespace EasyChartLib.PercentageGraphics
             var actualRect = GetActualRect(rect);
             _gfx.FillRectangle(brush, actualRect);
         }
+
+        public void FillPolygon(Brush brush, IEnumerable<PointF> points)
+        {
+            var actualPoints = points.Select(p => GetActualPoint(p)).ToArray();
+
+            var actualFrame = GetActualRect(new Rectangle(0, 0, 100, 100));
+            var actualPath = new GraphicsPath();
+            actualPath.AddPolygon(actualPoints);
+            var region = new Region(actualPath);
+            region.Intersect(actualFrame);
+
+            _gfx.FillRegion(brush, region);
+        }
+
         public void FillRectange(Brush brush, float x, float y, float width, float height)
         {
             var rect = new RectangleF(x, y, width, height);
