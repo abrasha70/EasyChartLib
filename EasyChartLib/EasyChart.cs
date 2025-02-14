@@ -105,15 +105,12 @@ namespace EasyChartLib
 
         public Image GenerateLmsChart(LmsChartSettings settings, List<LmsMeasurement> measurements)
         {
-            var bmp = new Bitmap(settings.Width, settings.Height);
-            var imageArea = CreateImageArea(bmp);
-
             //var lookupAxis = new Axis(measurements.Select(m => m.Lookup), EDirection.LeftToRight);
-            var lookupAxis = new Axis(0, 500, EDirection.LeftToRight);
+            var lookupAxis = new Axis(50, 500, EDirection.LeftToRight);
             var valuesAxis = new Axis(measurements.Select(m => m.MeasuredValue), EDirection.BottomToTop);
 
 
-            var xyChart = new XyChartDrawer(imageArea, lookupAxis, valuesAxis, settings);
+            var xyChart = new XyChartDrawer(settings, lookupAxis, valuesAxis);
 
             //xyChart.DrawAxes();
 
@@ -143,9 +140,7 @@ namespace EasyChartLib
                 xyChart.DrawPoint(Brushes.Navy, measurement.Lookup, measurement.MeasuredValue);
             }
 
-
-
-            return bmp;
+            return xyChart.GetBmp();
         }
 
         private List<LmsModel> GetLmsFile(string sourceKey, string segmentKey)

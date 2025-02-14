@@ -15,14 +15,19 @@ namespace EasyChartLib
             RightToLeft,
         }
 
+        private readonly Bitmap _bmp;
+        private readonly PercentGraphics _imageArea;
         private readonly PercentGraphics _chartArea;
         private readonly Axis _lookupAxis;
         private readonly Axis _valuesAxis;
         private readonly AxisDrawer _lookupAxisDrawer;
         private readonly AxisDrawer _valuesAxisDrawer;
 
-        public XyChartDrawer(PercentGraphics drawingArea, Axis lookupAxis, Axis valuesAxis, ChartSettings settings)
+        public XyChartDrawer(ChartSettings settings, Axis lookupAxis, Axis valuesAxis)
         {
+            _bmp = new Bitmap(settings.Width, settings.Height);
+            _imageArea = CreateImageArea(_bmp);
+
             //_drawingArea = drawingArea;
             _lookupAxis = lookupAxis;
             _valuesAxis = valuesAxis;
@@ -31,7 +36,7 @@ namespace EasyChartLib
             if (settings.ShowAxis)
             {
                 var font = new Font(SystemFonts.DefaultFont.FontFamily, settings.FontSize);
-                var digitSizeInPercentage = drawingArea.MeasureString("0", font);
+                var digitSizeInPercentage = _imageArea.MeasureString("0", font);
 
                 //var maxDigits = relevantValues.Max(value => AutoRound(value).ToString().Length);
                 var maxDigits = 4;
@@ -39,7 +44,7 @@ namespace EasyChartLib
                 var sideAxisWidth = spaceNeeded;
                 var bottomAxisHeight = digitSizeInPercentage.Height * 1.5f;
 
-                var areas = drawingArea.MatrixSplit(100 - bottomAxisHeight, sideAxisWidth);
+                var areas = _imageArea.MatrixSplit(100 - bottomAxisHeight, sideAxisWidth);
 
                 var chartArea = areas[0, 1];
                 var valuesAxisArea = areas[0, 0];
@@ -54,7 +59,7 @@ namespace EasyChartLib
             }
             else
             {
-                _chartArea = drawingArea;
+                _chartArea = _imageArea;
             }
 
             _chartArea.DrawBorder(Pens.Black);
@@ -130,7 +135,17 @@ namespace EasyChartLib
             return percPoints;
         }
 
+        private static PercentGraphics CreateImageArea(Bitmap bmp)
+        {
+            var margin = new ActualMargin(0, 0, 1, 1);
+            var imageArea = new PercentGraphics(bmp, margin);
+            imageArea.FillRectange(Brushes.White, 0, 0, 100, 100);
+            return imageArea;
+        }
 
-
+        internal Bitmap GetBmp()
+        {
+            return _bmp;
+        }
     }
 }
