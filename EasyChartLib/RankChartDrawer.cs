@@ -41,7 +41,7 @@ namespace EasyChartLib
 
         public void DrawLevelLine(Pen pen, float value, float lineSize = 100)
         {
-            var valuePercentage = _valuesAxis.GetValueInPecentage(value, IsInverted());
+            var valuePercentage = _valuesAxis.GetValueInPecentage(value);
 
             //crop:
             if (valuePercentage < 0 || valuePercentage > 100) return;
@@ -53,8 +53,8 @@ namespace EasyChartLib
 
         private void FillChartColumnArea(Brush brush, float? fromValue, float? toValue, float columnSize)
         {
-            var fromPercentage = _valuesAxis.GetValueInPecentage(fromValue ?? 0, IsInverted());
-            var toPercentage = _valuesAxis.GetValueInPecentage(toValue ?? 100, IsInverted());
+            var fromPercentage = _valuesAxis.GetValueInPecentage(fromValue ?? 0);
+            var toPercentage = _valuesAxis.GetValueInPecentage(toValue ?? 100);
 
             var minPercentage = Math.Min(fromPercentage, toPercentage);
             var maxPercentage = Math.Max(fromPercentage, toPercentage);
@@ -72,7 +72,7 @@ namespace EasyChartLib
 
         private void FillRotatingRectangle(Brush brush, float x, float y, float width, float height)
         {
-            if (IsVertical())
+            if (_valuesAxis.Direction.IsVertical)
             {
                 _drawingArea.FillRectange(brush, x, y, width, height);
             }
@@ -84,7 +84,7 @@ namespace EasyChartLib
 
         private void DrawRotatingLine(Pen pen, float x1, float y1, float x2, float y2)
         {
-            if (IsVertical())
+            if (_valuesAxis.Direction.IsVertical)
             {
                 _drawingArea.DrawLine(pen, x1, y1, x2, y2);
             }
@@ -129,18 +129,5 @@ namespace EasyChartLib
         //    return isVertical ? _drawingArea.ScaleHeight : _drawingArea.ScaleWidth;
         //}
 
-        private bool IsVertical()
-        {
-            if (_direction == EDirection.BottomToTop) return true;
-            if (_direction == EDirection.TopToBottom) return true;
-            return false;
-        }
-
-        private bool IsInverted()
-        {
-            if (_direction == EDirection.BottomToTop) return true;
-            if (_direction == EDirection.RightToLeft) return true;
-            return false;
-        }
     }
 }

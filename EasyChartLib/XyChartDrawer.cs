@@ -15,47 +15,41 @@ namespace EasyChartLib
         private readonly PercentGraphics _drawingArea;
         private readonly Axis _lookupAxis;
         private readonly Axis _valuesAxis;
-        private readonly EDirection _direction;
 
-        public XyChartDrawer(PercentGraphics drawingArea, Axis lookupAxis, Axis valuesAxis, EDirection direction = EDirection.LeftToRight)
+        public XyChartDrawer(PercentGraphics drawingArea, Axis lookupAxis, Axis valuesAxis)
         {
             _drawingArea = drawingArea;
             _lookupAxis = lookupAxis;
             _valuesAxis = valuesAxis;
-            _direction = direction;
         }
 
-        public void DrawPoint(float lookup, float value, Brush brush)
+        public void DrawPoint(Brush brush, float lookup, float value)
         {
-            var lookupPercent = _lookupAxis.GetValueInPecentage(lookup, IsInverted());
-            var valuePercent = _valuesAxis.GetValueInPecentage(value, true);
+            var lookupPercent = _lookupAxis.GetValueInPecentage(lookup);
+            var valuePercent = _valuesAxis.GetValueInPecentage(value);
 
             _drawingArea.DrawPoint(new Pen(brush, 3), lookupPercent, valuePercent);
         }
 
-        public void DrawLine(float fromLookup, float fromValue, float toLookup, float toValue, Pen pen)
+        public void DrawLine(Pen pen, float fromLookup, float fromValue, float toLookup, float toValue)
         {
-            var p1 = new PointF(
-                _lookupAxis.GetValueInPecentage(fromLookup, IsInverted()),
-                _valuesAxis.GetValueInPecentage(fromValue, true));
+            var fromPoint = new PointF(
+                _lookupAxis.GetValueInPecentage(fromLookup),
+                _valuesAxis.GetValueInPecentage(fromValue));
 
-            var p2 = new PointF(
-                _lookupAxis.GetValueInPecentage(toLookup, IsInverted()),
-                _valuesAxis.GetValueInPecentage(toValue, true));
+            var toPoint = new PointF(
+                _lookupAxis.GetValueInPecentage(toLookup),
+                _valuesAxis.GetValueInPecentage(toValue));
 
-            _drawingArea.DrawLine(pen, p1, p2);
+            DrawLine(pen, fromPoint, toPoint);
+        }
+
+        public void DrawLine(Pen pen, PointF fromPoint, PointF toPoint)
+        {
+            _drawingArea.DrawLine(pen, fromPoint, toPoint);
         }
 
 
-
-
-
-        private bool IsInverted()
-        {
-            //if (_direction == EDirection.BottomToTop) return true;
-            if (_direction == EDirection.RightToLeft) return true;
-            return false;
-        }
 
     }
 }

@@ -8,20 +8,18 @@ namespace EasyChartLib
     {
         private readonly PercentGraphics _drawingArea;
         private readonly Axis _axis;
-        private readonly DirectionObj _direction;
 
         public float TickLength { get; private set; }
         public int DecimalDigits { get; private set; }
 
 
-        internal AxisDrawer(PercentGraphics drawingArea, Axis axis, EDirection direction, SizeF digitSizeInPercentage)
+        internal AxisDrawer(PercentGraphics drawingArea, Axis axis, SizeF digitSizeInPercentage)
         {
             _drawingArea = drawingArea;
             _axis = axis;
-            _direction = new DirectionObj(direction);
 
             var maxDigits = AutoRound((float)axis.MaxValue).ToString().Length;
-            var textLengthPercentage = _direction.IsVertical ? digitSizeInPercentage.Height : digitSizeInPercentage.Width * maxDigits;
+            var textLengthPercentage = _axis.Direction.IsVertical ? digitSizeInPercentage.Height : digitSizeInPercentage.Width * maxDigits;
             TickLength = CalcTickSize((float)axis.MinValue, (float)axis.MaxValue, textLengthPercentage);
             DecimalDigits = GetDecimalDigits(TickLength);
         }
@@ -35,14 +33,14 @@ namespace EasyChartLib
 
             for (decimal tick = minValue; tick <= maxValue; tick += tickSize)
             {
-                var percentTick = _axis.GetValueInPecentage((float)tick, _direction.IsReversed);
+                var percentTick = _axis.GetValueInPecentage((float)tick);
 
                 //crop:
                 if (tick < minValue || tick > maxValue) continue;
                 if (percentTick < 5 || percentTick > 95) continue;
 
 
-                if (_direction.IsVertical)
+                if (_axis.Direction.IsVertical)
                 {
                     DrawLevelLine(tickPen, (float)tick, 75, 25);
                     var alignment = new Alignment { Horizontal = HorizontalAlignment.LeftToPoint, Vertical = VerticalAlignment.CenteredToPoint };
@@ -59,7 +57,7 @@ namespace EasyChartLib
 
         private void DrawLevelLine(Pen pen, float value, float offset, float lineSize)
         {
-            var valuePercentage = _axis.GetValueInPecentage(value, _direction.IsReversed);
+            var valuePercentage = _axis.GetValueInPecentage(value);
 
             //crop:
             if (valuePercentage < 0 || valuePercentage > 100) return;
@@ -69,7 +67,7 @@ namespace EasyChartLib
 
         private void DrawRotatingLine(Pen pen, float x1, float y1, float x2, float y2)
         {
-            if (_direction.IsVertical)
+            if (_axis.Direction.IsVertical)
             {
                 _drawingArea.DrawLine(pen, x1, y1, x2, y2);
             }

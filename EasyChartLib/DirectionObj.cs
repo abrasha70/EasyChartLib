@@ -20,7 +20,7 @@
             }
         }
 
-        public bool IsReversed
+        public bool IsInverted
         {
             get
             {

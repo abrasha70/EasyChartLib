@@ -10,14 +10,20 @@ namespace EasyChartLib
         public decimal MinValue { get; private set; }
         public decimal MaxValue { get; private set; }
 
-        public Axis(decimal minValue, decimal maxValue)
+        public DirectionObj Direction { get; private set; }
+
+
+        public Axis(decimal minValue, decimal maxValue, EDirection direction)
         {
             MinValue = minValue;
             MaxValue = maxValue;
+            Direction = new DirectionObj(direction);
         }
+        
 
-        public Axis(IEnumerable<float> relevantValues)
+        public Axis(IEnumerable<float> relevantValues, EDirection direction)
         {
+            Direction = new DirectionObj(direction);
             var minValue = relevantValues.Min();
             var maxValue = relevantValues.Max();
             var gap = maxValue - minValue;
@@ -35,20 +41,20 @@ namespace EasyChartLib
             if (MinValue < 0 && minValue >= 0) MinValue = 0;
         }
 
-        public Axis (float relevantValue)
-            : this (new [] { relevantValue })
+        public Axis (float relevantValue, EDirection direction)
+            : this (new [] { relevantValue }, direction)
         {
         }
 
 
-        public float GetValueInPecentage(float value, bool isInverted = false)
+        public float GetValueInPecentage(float value)
         {
             var minValue = (float)MinValue;
             var maxValue = (float)MaxValue;
 
             float percentage = (value - minValue) / (maxValue - minValue) * 100;
 
-            if (isInverted) percentage = 100 - percentage;
+            if (Direction.IsInverted) percentage = 100 - percentage;
 
             return percentage;
         }

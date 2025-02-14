@@ -67,7 +67,7 @@ namespace EasyChartLib.PercentageGraphics
             var chunkIndex = 0;
             var remainingIndex = 1;
 
-            if (directionObj.IsReversed)
+            if (directionObj.IsInverted)
             {
                 chunkLength = FullScale - chunkLength;
                 chunkIndex = 1;

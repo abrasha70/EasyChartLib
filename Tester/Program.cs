@@ -13,22 +13,22 @@ namespace Tester
     {
         static void Main(string[] args)
         {
-            //var request = GetSampleLmsChartRequest();
-            //var chart = new EasyChart();
-
-            //var image = chart.GenerateLmsChart(request.Settings, request.Measurements);
-            //image.Save("sample.png", ImageFormat.Png);
-            //System.Diagnostics.Process.Start("sample.png");
-
-
-
-            var request = GetSampleRankChartRequest();
+            var request = GetSampleLmsChartRequest();
             var chart = new EasyChart();
 
-            //var image = chart.GenerateMultiRankChart(request.Settings, request.Categories);
-            var image = chart.GenerateSingleRankChart(request.Settings, request.Categories[0]);
+            var image = chart.GenerateLmsChart(request.Settings, request.Measurements);
             image.Save("sample.png", ImageFormat.Png);
             System.Diagnostics.Process.Start("sample.png");
+
+
+
+            //var request = GetSampleRankChartRequest();
+            //var chart = new EasyChart();
+
+            ////var image = chart.GenerateMultiRankChart(request.Settings, request.Categories);
+            //var image = chart.GenerateSingleRankChart(request.Settings, request.Categories[0]);
+            //image.Save("sample.png", ImageFormat.Png);
+            //System.Diagnostics.Process.Start("sample.png");
         }
 
         private static LmsChartParameters GetSampleLmsChartRequest()

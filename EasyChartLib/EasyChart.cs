@@ -25,7 +25,7 @@ namespace EasyChartLib
             var textHeight = digitSizeInPercentage.Height;
 
             var relevantValues = GetRelevantValues(categories, settings.ZoomMode);
-            var axis = new Axis(relevantValues);
+            var axis = new Axis(relevantValues, EDirection.BottomToTop);
 
             var maxDigits = relevantValues.Max(value => AutoRound(value).ToString().Length);
             var spaceNeeded = digitSizeInPercentage.Width * maxDigits;
@@ -40,7 +40,7 @@ namespace EasyChartLib
             {
                 axisArea = axisArea.CreateSubArea(0, 0, 100, 100 - categoryHeight);
 
-                var axisDrawer = new AxisDrawer(axisArea, axis, EDirection.BottomToTop, digitSizeInPercentage);
+                var axisDrawer = new AxisDrawer(axisArea, axis, digitSizeInPercentage);
                 axisDrawer.DrawAxis(Pens.Black, font, Brushes.Black);
             }
             else
@@ -83,10 +83,10 @@ namespace EasyChartLib
 
             var relevantValues = GetRelevantValues(chartData, settings.ZoomMode);
 
-            var axis = new Axis(relevantValues);
+            var axis = new Axis(relevantValues, EDirection.LeftToRight);
             if (settings.ShowAxis)
             {
-                var axisDrawer = new AxisDrawer(axisArea, axis, EDirection.LeftToRight, digitSizeInPercentage);
+                var axisDrawer = new AxisDrawer(axisArea, axis, digitSizeInPercentage);
                 axisDrawer.DrawAxis(Pens.Black, font, Brushes.Black);
             }
             else
@@ -116,12 +116,13 @@ namespace EasyChartLib
             var chartsArea = areas[0];
             var axisArea = areas[1];
 
-            var lookupAxis = new Axis(measurements.Select(m => m.Lookup));
-            var valuesAxis = new Axis(measurements.Select(m => m.MeasuredValue));
+            //var lookupAxis = new Axis(measurements.Select(m => m.Lookup), EDirection.LeftToRight);
+            var lookupAxis = new Axis(0, 500, EDirection.LeftToRight);
+            var valuesAxis = new Axis(measurements.Select(m => m.MeasuredValue), EDirection.BottomToTop);
 
             if (settings.ShowAxis)
             {
-                var axisDrawer = new AxisDrawer(axisArea, lookupAxis, EDirection.LeftToRight, digitSize);
+                var axisDrawer = new AxisDrawer(axisArea, lookupAxis, digitSize);
                 axisDrawer.DrawAxis(Pens.Black, font, Brushes.Black);
             }
             else
@@ -142,7 +143,7 @@ namespace EasyChartLib
             {
                 if (lmsStat == prev) continue;
 
-                xyChart.DrawLine((float)prev.Lookup, (float)prev.M, (float)lmsStat.Lookup, (float)lmsStat.M, Pens.Green);
+                xyChart.DrawLine(Pens.Green, (float)prev.Lookup, (float)prev.M, (float)lmsStat.Lookup, (float)lmsStat.M);
 
                 prev = lmsStat;
             }
@@ -150,7 +151,7 @@ namespace EasyChartLib
             //DrawLmsMeasurements
             foreach(var measurement in measurements)
             {
-                xyChart.DrawPoint(measurement.Lookup, measurement.MeasuredValue, Brushes.Navy);
+                xyChart.DrawPoint(Brushes.Navy, measurement.Lookup, measurement.MeasuredValue);
             }
 
 
