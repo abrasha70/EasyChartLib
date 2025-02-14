@@ -30,13 +30,12 @@ namespace EasyChartLib
             {
                 var font = new Font(SystemFonts.DefaultFont.FontFamily, settings.FontSize);
                 var digitSizeInPercentage = drawingArea.MeasureString("0", font);
-                var axisTextHeight = digitSizeInPercentage.Height;
 
                 //var maxDigits = relevantValues.Max(value => AutoRound(value).ToString().Length);
                 var maxDigits = 4;
                 var spaceNeeded = digitSizeInPercentage.Width * maxDigits;
                 var sideAxisWidth = spaceNeeded;
-                var bottomAxisHeight = axisTextHeight * 1.5f;
+                var bottomAxisHeight = digitSizeInPercentage.Height * 1.5f;
 
                 var areas = drawingArea.MatrixSplit(100 - bottomAxisHeight, sideAxisWidth);
 
@@ -64,7 +63,10 @@ namespace EasyChartLib
             var lookupPercent = _lookupAxis.GetValueInPecentage(lookup);
             var valuePercent = _valuesAxis.GetValueInPecentage(value);
 
-            _chartArea.DrawPoint(new Pen(brush, 3), lookupPercent, valuePercent);
+            if (lookupPercent < 0 || lookupPercent > 100) return;
+            if (valuePercent < 0 || valuePercent > 100) return;
+
+            _chartArea.DrawPoint(new Pen(brush, 5), lookupPercent, valuePercent);
         }
 
         public void DrawLine(Pen pen, float fromLookup, float fromValue, float toLookup, float toValue)
@@ -77,15 +79,22 @@ namespace EasyChartLib
                 _lookupAxis.GetValueInPecentage(toLookup),
                 _valuesAxis.GetValueInPecentage(toValue));
 
-            DrawLine(pen, fromPoint, toPoint);
+            DrawLineInPercentages(pen, fromPoint, toPoint);
         }
 
-        public void DrawLine(Pen pen, PointF fromPoint, PointF toPoint)
+
+
+
+        private void DrawLineInPercentages(Pen pen, PointF fromPoint, PointF toPoint)
         {
+            if (fromPoint.X < 0 || fromPoint.X > 100) return;
+            if (fromPoint.Y < 0 || fromPoint.Y > 100) return;
+
+            if (toPoint.X < 0 || toPoint.X > 100) return;
+            if (toPoint.Y < 0 || toPoint.Y > 100) return;
+
             _chartArea.DrawLine(pen, fromPoint, toPoint);
         }
-
-
 
     }
 }
