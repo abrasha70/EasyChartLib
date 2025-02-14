@@ -82,6 +82,23 @@ namespace EasyChartLib.PercentageGraphics
 
 
 
+        public PercentGraphics[,] MatrixSplit(float verticalSplitSize, float horizontalSplitSize)
+        {
+            var verticalParts = VerticalSplit(verticalSplitSize);
+            var top = verticalParts[0];
+            var bottom = verticalParts[1];
+
+            var topParts = top.HorizontalSplit(horizontalSplitSize);
+            var bottomParts = bottom.HorizontalSplit(horizontalSplitSize);
+
+            var areas = new PercentGraphics[2, 2];
+            areas[0, 0] = topParts[0];
+            areas[0, 1] = topParts[1];
+            areas[1, 0] = bottomParts[0];
+            areas[1, 1] = bottomParts[1];
+            return areas;
+        }
+
         public List<PercentGraphics> VerticalSplit(float splitSize)
         {
             var parts = new List<PercentGraphics>();

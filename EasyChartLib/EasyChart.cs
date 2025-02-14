@@ -108,29 +108,14 @@ namespace EasyChartLib
             var bmp = new Bitmap(settings.Width, settings.Height);
             var imageArea = CreateImageArea(bmp);
 
-            var font = new Font(SystemFonts.DefaultFont.FontFamily, settings.FontSize);
-            var digitSize = imageArea.MeasureString("0", font);
-            var axisTextHeight = digitSize.Height;
-
-            var areas = imageArea.VerticalSplit(100 - axisTextHeight * 1.5f);
-            var chartsArea = areas[0];
-            var axisArea = areas[1];
-
             //var lookupAxis = new Axis(measurements.Select(m => m.Lookup), EDirection.LeftToRight);
             var lookupAxis = new Axis(0, 500, EDirection.LeftToRight);
             var valuesAxis = new Axis(measurements.Select(m => m.MeasuredValue), EDirection.BottomToTop);
 
-            if (settings.ShowAxis)
-            {
-                var axisDrawer = new AxisDrawer(axisArea, lookupAxis, digitSize);
-                axisDrawer.DrawAxis(Pens.Black, font, Brushes.Black);
-            }
-            else
-            {
-                chartsArea = imageArea;
-            }
 
-            var xyChart = new XyChartDrawer(chartsArea, lookupAxis, valuesAxis);
+            var xyChart = new XyChartDrawer(imageArea, lookupAxis, valuesAxis, settings);
+
+            //xyChart.DrawAxes();
 
             //TODO:
             var lmsStats = GetLmsFile(settings.SourceKey, settings.SegmentKey);
@@ -155,7 +140,6 @@ namespace EasyChartLib
             }
 
 
-            chartsArea.DrawBorder(Pens.Black);
 
             return bmp;
         }
