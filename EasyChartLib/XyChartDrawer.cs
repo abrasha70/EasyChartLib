@@ -9,12 +9,6 @@ namespace EasyChartLib
 {
     internal class XyChartDrawer
     {
-        public enum EDirection
-        {
-            LeftToRight,
-            RightToLeft,
-        }
-
         private readonly Bitmap _bmp;
         private readonly PercentGraphics _imageArea;
         private readonly PercentGraphics _chartArea;
