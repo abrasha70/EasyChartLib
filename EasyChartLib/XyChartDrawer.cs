@@ -103,6 +103,14 @@ namespace EasyChartLib
             _chartArea.FillPolygon(brush, areaPercPoints);
         }
 
+        public void DrawLineGraph(Pen pen, IEnumerable<PointF> points)
+        {
+            var areaPercPoints = GetPointsInPercentage(points);
+
+            _chartArea.DrawLines(pen, areaPercPoints);
+        }
+
+
 
         private void DrawLineInPercentages(Pen pen, PointF fromPoint, PointF toPoint)
         {

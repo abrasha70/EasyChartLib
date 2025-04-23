@@ -106,8 +106,29 @@ namespace EasyChartLib
         public Image GenerateLmsChart(LmsChartSettings settings, List<LmsMeasurement> measurements)
         {
             //var lookupAxis = new Axis(measurements.Select(m => m.Lookup), EDirection.LeftToRight);
-            var lookupAxis = new Axis(50, 500, EDirection.LeftToRight);
-            var valuesAxis = new Axis(measurements.Select(m => m.MeasuredValue), EDirection.BottomToTop);
+            var minLookup = 50;
+            var maxLookup = 500;
+
+            var lmsStats = GetLmsFile(settings.SourceKey, settings.SegmentKey);
+            var filtered = lmsStats
+                .Where(lmsStat => lmsStat.Lookup > minLookup && lmsStat.Lookup < maxLookup)
+                .OrderBy(lmsStat => lmsStat.Lookup);
+
+            var percentilesValues = new Dictionary<int, IEnumerable<LmsMeasurement>>();
+            foreach (var percentile in new[] { 97, 90, 50, 10, 3 })
+            {
+                percentilesValues[percentile] = filtered.Select(m => new LmsMeasurement
+                {
+                    Lookup = (float)m.Lookup,
+                    MeasuredValue = (float)LmsCalc.GetLmsValue(m, percentile)
+                });
+            }
+
+            var minValue = percentilesValues[3].Min(m => m.MeasuredValue);
+            var maxValue = percentilesValues[97].Max(m => m.MeasuredValue);
+
+            var lookupAxis = new Axis(minLookup, maxLookup, EDirection.LeftToRight);
+            var valuesAxis = new Axis((decimal)minValue, (decimal)maxValue, EDirection.BottomToTop);
 
 
             var xyChart = new XyChartDrawer(settings, lookupAxis, valuesAxis);
@@ -115,10 +136,6 @@ namespace EasyChartLib
             //xyChart.DrawAxes();
 
             //TODO:
-            var lmsStats = GetLmsFile(settings.SourceKey, settings.SegmentKey);
-            var filtered = lmsStats
-                .Where(lmsStat => lmsStat.Lookup > lookupAxis.MinValue && lmsStat.Lookup < lookupAxis.MaxValue)
-                .OrderBy(lmsStat => lmsStat.Lookup);
 
             //var prev = filtered.FirstOrDefault();
             //foreach(var lmsStat in filtered)
@@ -130,7 +147,18 @@ namespace EasyChartLib
             //    prev = lmsStat;
             //}
 
-            xyChart.DrawAreaGraph(Brushes.Green, filtered.Select(m => new PointF((float)m.Lookup, (float)m.M)));
+            foreach (var percentile in new [] { 97, 90, 50, 10, 3 })
+            {
+                xyChart.DrawAreaGraph(new SolidBrush(Color.FromArgb(20, Color.Blue)),
+                    percentilesValues[percentile].Select(m => new PointF(m.Lookup, m.MeasuredValue))
+                    );
+
+                xyChart.DrawLineGraph(Pens.Red,
+                    percentilesValues[percentile].Select(m => new PointF(m.Lookup, m.MeasuredValue))
+                    );
+                
+            }
+            //xyChart.DrawAreaGraph(Brushes.Green, filtered.Select(m => new PointF((float)m.Lookup, (float)m.M)));
 
 
             //DrawLmsGraphs
@@ -139,6 +167,7 @@ namespace EasyChartLib
             {
                 xyChart.DrawPoint(Brushes.Navy, measurement.Lookup, measurement.MeasuredValue);
             }
+
 
             return xyChart.GetBmp();
         }

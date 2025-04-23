@@ -51,10 +51,17 @@ namespace EasyChartLib.PercentageGraphics
             var actualFrame = GetActualRect(new Rectangle(0, 0, 100, 100));
             var actualPath = new GraphicsPath();
             actualPath.AddPolygon(actualPoints);
-            var region = new Region(actualPath);
-            region.Intersect(actualFrame);
+            var actualRegion = new Region(actualPath);
+            actualRegion.Intersect(actualFrame);
 
-            _gfx.FillRegion(brush, region);
+            _gfx.FillRegion(brush, actualRegion);
+        }
+
+        public void DrawLines(Pen pen, IEnumerable<PointF> points)
+        {
+            var actualPoints = points.Select(p => GetActualPoint(p)).ToArray();
+
+            _gfx.DrawLines(pen, actualPoints);
         }
 
         public void FillRectange(Brush brush, float x, float y, float width, float height)
