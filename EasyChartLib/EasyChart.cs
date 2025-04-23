@@ -105,27 +105,18 @@ namespace EasyChartLib
 
         public Image GenerateLmsChart(LmsChartSettings settings, List<LmsMeasurement> measurements)
         {
-            //var lookupAxis = new Axis(measurements.Select(m => m.Lookup), EDirection.LeftToRight);
             var minLookup = 50;
             var maxLookup = 500;
 
-            var lmsStats = GetLmsFile(settings.SourceKey, settings.SegmentKey);
-            var filtered = lmsStats
+            var lmsArray = GetLmsFile(settings.SourceKey, settings.SegmentKey);
+            var filtered = lmsArray
                 .Where(lmsStat => lmsStat.Lookup > minLookup && lmsStat.Lookup < maxLookup)
                 .OrderBy(lmsStat => lmsStat.Lookup);
 
-            var percentilesValues = new Dictionary<int, IEnumerable<LmsMeasurement>>();
-            foreach (var percentile in new[] { 97, 90, 50, 10, 3 })
-            {
-                percentilesValues[percentile] = filtered.Select(m => new LmsMeasurement
-                {
-                    Lookup = (float)m.Lookup,
-                    MeasuredValue = (float)LmsCalc.GetLmsValue(m, percentile)
-                });
-            }
+            var allStats = new PercentilesStats(filtered);
 
-            var minValue = percentilesValues[3].Min(m => m.MeasuredValue);
-            var maxValue = percentilesValues[97].Max(m => m.MeasuredValue);
+            var minValue = allStats.GetPercentileStats(EPercentile.Perc3).Min(m => m.PercentileValue);
+            var maxValue = allStats.GetPercentileStats(EPercentile.Perc97).Max(m => m.PercentileValue);
 
             var lookupAxis = new Axis(minLookup, maxLookup, EDirection.LeftToRight);
             var valuesAxis = new Axis((decimal)minValue, (decimal)maxValue, EDirection.BottomToTop);
@@ -133,32 +124,71 @@ namespace EasyChartLib
 
             var xyChart = new XyChartDrawer(settings, lookupAxis, valuesAxis);
 
-            //xyChart.DrawAxes();
 
-            //TODO:
-
-            //var prev = filtered.FirstOrDefault();
-            //foreach(var lmsStat in filtered)
-            //{
-            //    if (lmsStat == prev) continue;
-
-            //    xyChart.DrawLine(Pens.Green, (float)prev.Lookup, (float)prev.M, (float)lmsStat.Lookup, (float)lmsStat.M);
-
-            //    prev = lmsStat;
-            //}
-
-            foreach (var percentile in new [] { 97, 90, 50, 10, 3 })
+            var percentileDrawSettings = new List<PercentileDrawSetting>()
             {
-                xyChart.DrawAreaGraph(new SolidBrush(Color.FromArgb(20, Color.Blue)),
-                    percentilesValues[percentile].Select(m => new PointF(m.Lookup, m.MeasuredValue))
+                new PercentileDrawSetting
+                {
+                    Percentile = EPercentile.Perc97,
+                    GraphBelowBrush = new SolidBrush(Color.FromArgb(255, 214, 214)),    //#ffd6d6 - light red
+                    GraphLinePen = new Pen(Color.DarkRed, 2),
+                },
+                new PercentileDrawSetting
+                {
+                    Percentile = EPercentile.Perc90,
+                    GraphBelowBrush = Brushes.LightYellow,
+                    GraphLinePen = new Pen(Color.Goldenrod, 2),
+                },
+                new PercentileDrawSetting
+                {
+                    Percentile = EPercentile.Perc75,
+                    GraphBelowBrush = new SolidBrush(Color.FromArgb(215, 255, 214)),    //#d7ffd6 - light green
+                    GraphLinePen = new Pen(Color.Goldenrod, 2),
+                },
+                new PercentileDrawSetting
+                {
+                    Percentile = EPercentile.Perc50,
+                    GraphBelowBrush = new SolidBrush(Color.FromArgb(215, 255, 214)),    //#d7ffd6 - light green
+                    GraphLinePen = new Pen(Color.Green, 3),
+                },
+                new PercentileDrawSetting
+                {
+                    Percentile = EPercentile.Perc25,
+                    GraphBelowBrush = Brushes.LightYellow,
+                    GraphLinePen = new Pen(Color.Goldenrod, 2),
+                },
+                new PercentileDrawSetting
+                {
+                    Percentile = EPercentile.Perc10,
+                    GraphBelowBrush = new SolidBrush(Color.FromArgb(255, 214, 214)),    //#ffd6d6 - light red
+                    GraphLinePen = new Pen(Color.Goldenrod, 2),
+                },
+                new PercentileDrawSetting
+                {
+                    Percentile = EPercentile.Perc3,
+                    GraphBelowBrush = Brushes.White,
+                    GraphLinePen = new Pen(Color.DarkRed, 2),
+                },
+            };
+
+
+            foreach (var percentileSetting in percentileDrawSettings)
+            {
+                var percentileStats = allStats.GetPercentileStats(percentileSetting.Percentile)
+                    .Select(stat => new
+                    {
+                        Lookup = (float)stat.Lookup,
+                        PercentileValue = (float)stat.PercentileValue,
+                    });
+
+                xyChart.DrawAreaGraph(percentileSetting.GraphBelowBrush,
+                    percentileStats.Select(stat => new PointF(stat.Lookup, stat.PercentileValue))
                     );
 
-                xyChart.DrawLineGraph(Pens.Red,
-                    percentilesValues[percentile].Select(m => new PointF(m.Lookup, m.MeasuredValue))
+                xyChart.DrawLineGraph(percentileSetting.GraphLinePen,
+                    percentileStats.Select(stat => new PointF(stat.Lookup, stat.PercentileValue))
                     );
-                
             }
-            //xyChart.DrawAreaGraph(Brushes.Green, filtered.Select(m => new PointF((float)m.Lookup, (float)m.M)));
 
 
             //DrawLmsGraphs
@@ -275,7 +305,7 @@ namespace EasyChartLib
 
         private IEnumerable<float> GetRelevantValues(SingleCategoryData category, EZoomMode zoomMode)
         {
-            return GetRelevantValues(new [] { category }, zoomMode);
+            return GetRelevantValues(new[] { category }, zoomMode);
         }
 
         private IEnumerable<float> GetRelevantValues(IEnumerable<SingleCategoryData> categories, EZoomMode zoomMode)

@@ -50,8 +50,9 @@
     <Compile Include="DirectionObj.cs" />
     <Compile Include="EDirection.cs" />
     <Compile Include="LmsChartParameters.cs" />
-    <Compile Include="LmsHelper.cs" />
+    <Compile Include="LmsCalc.cs" />
     <Compile Include="Model\LmsFileModel.cs" />
+    <Compile Include="PercentileDrawSetting.cs" />
     <Compile Include="XyChartDrawer.cs" />
     <Compile Include="RankChartDrawer.cs" />
     <Compile Include="ChartSettings.cs" />
