@@ -105,8 +105,8 @@ namespace EasyChartLib
 
         public Image GenerateLmsChart(LmsChartSettings settings, List<LmsMeasurement> measurements)
         {
-            var minLookup = 50;
-            var maxLookup = 500;
+            var minLookup = 24;
+            var maxLookup = 240;
 
             var lmsArray = GetLmsFile(settings.SourceKey, settings.SegmentKey);
             var filtered = lmsArray

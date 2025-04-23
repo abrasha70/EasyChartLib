@@ -44,15 +44,15 @@ namespace Tester
                     ZoomMode = EZoomMode.FocusedAndNearby,
                     //RanksAlpha = 255,
                     FontSize = 10f, //SystemFonts.DefaultFont.Size,
-                    SourceKey = "BmiForAgeLmsByWho",
-                    SegmentKey = "Boys0-5",
+                    SourceKey = "BmiForAgeLmsByCdc",    //"BmiForAgeLmsByWho",
+                    SegmentKey = "Girls2-20",           //"Boys0-5"
                 },
                 Measurements = new List<LmsMeasurement>
                 {
                     new LmsMeasurement
                     {
-                        Lookup = 90,
-                        MeasuredValue = 17,
+                        Lookup = 8*12,        //90
+                        MeasuredValue = 15, //17,
                     }
                 }
             };
