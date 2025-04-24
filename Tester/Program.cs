@@ -49,6 +49,11 @@ namespace Tester
                 {
                     new LmsMeasurement
                     {
+                        Lookup = 10,
+                        MeasuredValue = 16.8f,
+                    },
+                    new LmsMeasurement
+                    {
                         Lookup = 8,
                         MeasuredValue = 15,
                     },

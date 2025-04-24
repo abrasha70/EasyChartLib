@@ -145,13 +145,13 @@ namespace EasyChartLib
                 {
                     Percentile = EPercentile.Perc90,
                     GraphBelowBrush = new SolidBrush(Color.FromArgb(232, 232, 220)),    //#e8e8dc - light yellow
-                    GraphLinePen = new Pen(Color.Goldenrod, 2),
+                    GraphLinePen = new Pen(Color.DarkOrange, 1),
                 },
                 new PercentileDrawSetting
                 {
                     Percentile = EPercentile.Perc75,
                     GraphBelowBrush = new SolidBrush(Color.FromArgb(222, 232, 220)),    //#dee8dc - light green
-                    GraphLinePen = new Pen(Color.Goldenrod, 2),
+                    GraphLinePen = new Pen(Color.Goldenrod, 1),
                 },
                 new PercentileDrawSetting
                 {
@@ -163,13 +163,13 @@ namespace EasyChartLib
                 {
                     Percentile = EPercentile.Perc25,
                     GraphBelowBrush = new SolidBrush(Color.FromArgb(232, 232, 220)),    //#e8e8dc - light yellow
-                    GraphLinePen = new Pen(Color.Goldenrod, 2),
+                    GraphLinePen = new Pen(Color.Goldenrod, 1),
                 },
                 new PercentileDrawSetting
                 {
                     Percentile = EPercentile.Perc10,
                     GraphBelowBrush = new SolidBrush(Color.FromArgb(232, 220, 220)),    //#e8dcdc - light red
-                    GraphLinePen = new Pen(Color.Goldenrod, 2),
+                    GraphLinePen = new Pen(Color.DarkOrange, 1),
                 },
                 new PercentileDrawSetting
                 {

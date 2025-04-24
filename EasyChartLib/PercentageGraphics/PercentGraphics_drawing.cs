@@ -74,7 +74,7 @@ namespace EasyChartLib.PercentageGraphics
         {
             var actualRadius = pen.Width;
             var actualPoint = GetActualPoint(x, y);
-            var actualRect = new RectangleF(actualPoint.X - actualRadius, actualPoint.Y - actualRadius, actualRadius, actualRadius);
+            var actualRect = new RectangleF(actualPoint.X - actualRadius / 2, actualPoint.Y - actualRadius / 2, actualRadius, actualRadius);
 
             _gfx.FillEllipse(pen.Brush, actualRect);
         }
