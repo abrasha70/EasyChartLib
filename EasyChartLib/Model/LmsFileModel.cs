@@ -8,6 +8,10 @@ namespace EasyChartLib.Model
 {
     internal class LmsFileModel
     {
+        public decimal LookupZoomFrom { get; set; }
+
+        public decimal LookupZoomTo { get; set; }
+
         public List<LmsModel> Lms { get; set; }
     }
 

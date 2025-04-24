@@ -105,15 +105,23 @@ namespace EasyChartLib
 
         public Image GenerateLmsChart(LmsChartSettings settings, List<LmsMeasurement> measurements)
         {
-            var minLookup = (decimal)measurements.Min(m => m.Lookup) - (3 * 12);
-            var maxLookup = (decimal)measurements.Max(m => m.Lookup) + (1 * 12);
+            var lmsFile = GetLmsFile(settings.SourceKey, settings.SegmentKey);
+            var lms = lmsFile.Lms;
 
-            var lmsArray = GetLmsFile(settings.SourceKey, settings.SegmentKey);
-            var filtered = lmsArray
+            var minLmsLookup = lms.Min(l => l.Lookup);
+            var maxLmsLookup = lms.Max(l => l.Lookup);
+
+            var minMeasurementLookup = (decimal)measurements.Min(m => m.Lookup);
+            var maxMeasurementLookup = (decimal)measurements.Max(m => m.Lookup);
+
+            var minLookup = minMeasurementLookup + lmsFile.LookupZoomFrom;
+            var maxLookup = maxMeasurementLookup + lmsFile.LookupZoomTo;
+
+            var filteredLms = lmsFile.Lms
                 .Where(lmsStat => lmsStat.Lookup > minLookup && lmsStat.Lookup < maxLookup)
                 .OrderBy(lmsStat => lmsStat.Lookup);
 
-            var allStats = new PercentilesStats(filtered);
+            var allStats = new PercentilesStats(filteredLms);
 
             var minValue = allStats.GetPercentileStats(EPercentile.Perc3).Min(m => m.PercentileValue);
             var maxValue = allStats.GetPercentileStats(EPercentile.Perc97).Max(m => m.PercentileValue);
@@ -195,20 +203,20 @@ namespace EasyChartLib
             //DrawLmsMeasurements
             foreach (var measurement in measurements)
             {
-                xyChart.DrawPoint(new Pen(Color.Navy, 8), measurement.Lookup, measurement.MeasuredValue);
+                xyChart.DrawPoint(new Pen(Color.Navy, 10), measurement.Lookup, measurement.MeasuredValue);
             }
 
 
             return xyChart.GetBmp();
         }
 
-        private List<LmsModel> GetLmsFile(string sourceKey, string segmentKey)
+        private LmsFileModel GetLmsFile(string sourceKey, string segmentKey)
         {
             var hc = new HttpClient();
             var uri = new Uri($"https://bioclinic.blob.core.windows.net/static/lms/{sourceKey}/{segmentKey}.json");
             var json = hc.GetStringAsync(uri).Result;
             var obj = JsonConvert.DeserializeObject<LmsFileModel>(json);
-            return obj.Lms;
+            return obj;
         }
 
 

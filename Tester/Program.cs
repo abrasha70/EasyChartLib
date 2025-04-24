@@ -45,14 +45,19 @@ namespace Tester
                     //RanksAlpha = 255,
                     FontSize = 10f, //SystemFonts.DefaultFont.Size,
                     SourceKey = "BmiForAgeLmsByCdc",    //"BmiForAgeLmsByWho",
-                    SegmentKey = "Girls2-20",           //"Boys0-5"
+                    SegmentKey = "Boys2-20",           //"Boys0-5"
                 },
                 Measurements = new List<LmsMeasurement>
                 {
                     new LmsMeasurement
                     {
-                        Lookup = 8*12,        //90
-                        MeasuredValue = 15, //17,
+                        Lookup = 8,
+                        MeasuredValue = 15,
+                    },
+                    new LmsMeasurement
+                    {
+                        Lookup = 7,
+                        MeasuredValue = 14.5f,
                     }
                 }
             };
