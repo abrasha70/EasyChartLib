@@ -59,7 +59,7 @@ namespace EasyChartLib
             _chartArea.DrawBorder(Pens.Black);
         }
 
-        public void DrawPoint(Brush brush, float lookup, float value)
+        public void DrawPoint(Pen pen, float lookup, float value)
         {
             var lookupPercent = _lookupAxis.GetValueInPecentage(lookup);
             var valuePercent = _valuesAxis.GetValueInPecentage(value);
@@ -67,7 +67,7 @@ namespace EasyChartLib
             if (lookupPercent < 0 || lookupPercent > 100) return;
             if (valuePercent < 0 || valuePercent > 100) return;
 
-            _chartArea.DrawPoint(new Pen(brush, 5), lookupPercent, valuePercent);
+            _chartArea.DrawPoint(pen, lookupPercent, valuePercent);
         }
 
         public void DrawLine(Pen pen, float fromLookup, float fromValue, float toLookup, float toValue)

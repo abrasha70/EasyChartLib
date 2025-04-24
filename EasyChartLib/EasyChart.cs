@@ -105,8 +105,8 @@ namespace EasyChartLib
 
         public Image GenerateLmsChart(LmsChartSettings settings, List<LmsMeasurement> measurements)
         {
-            var minLookup = 24;
-            var maxLookup = 240;
+            var minLookup = (decimal)measurements.Min(m => m.Lookup) - (3 * 12);
+            var maxLookup = (decimal)measurements.Max(m => m.Lookup) + (1 * 12);
 
             var lmsArray = GetLmsFile(settings.SourceKey, settings.SegmentKey);
             var filtered = lmsArray
@@ -130,37 +130,37 @@ namespace EasyChartLib
                 new PercentileDrawSetting
                 {
                     Percentile = EPercentile.Perc97,
-                    GraphBelowBrush = new SolidBrush(Color.FromArgb(255, 214, 214)),    //#ffd6d6 - light red
+                    GraphBelowBrush = new SolidBrush(Color.FromArgb(232, 220, 220)),    //#e8dcdc - light red
                     GraphLinePen = new Pen(Color.DarkRed, 2),
                 },
                 new PercentileDrawSetting
                 {
                     Percentile = EPercentile.Perc90,
-                    GraphBelowBrush = Brushes.LightYellow,
+                    GraphBelowBrush = new SolidBrush(Color.FromArgb(232, 232, 220)),    //#e8e8dc - light yellow
                     GraphLinePen = new Pen(Color.Goldenrod, 2),
                 },
                 new PercentileDrawSetting
                 {
                     Percentile = EPercentile.Perc75,
-                    GraphBelowBrush = new SolidBrush(Color.FromArgb(215, 255, 214)),    //#d7ffd6 - light green
+                    GraphBelowBrush = new SolidBrush(Color.FromArgb(222, 232, 220)),    //#dee8dc - light green
                     GraphLinePen = new Pen(Color.Goldenrod, 2),
                 },
                 new PercentileDrawSetting
                 {
                     Percentile = EPercentile.Perc50,
-                    GraphBelowBrush = new SolidBrush(Color.FromArgb(215, 255, 214)),    //#d7ffd6 - light green
+                    GraphBelowBrush = new SolidBrush(Color.FromArgb(222, 232, 220)),    //#dee8dc - light green
                     GraphLinePen = new Pen(Color.Green, 3),
                 },
                 new PercentileDrawSetting
                 {
                     Percentile = EPercentile.Perc25,
-                    GraphBelowBrush = Brushes.LightYellow,
+                    GraphBelowBrush = new SolidBrush(Color.FromArgb(232, 232, 220)),    //#e8e8dc - light yellow
                     GraphLinePen = new Pen(Color.Goldenrod, 2),
                 },
                 new PercentileDrawSetting
                 {
                     Percentile = EPercentile.Perc10,
-                    GraphBelowBrush = new SolidBrush(Color.FromArgb(255, 214, 214)),    //#ffd6d6 - light red
+                    GraphBelowBrush = new SolidBrush(Color.FromArgb(232, 220, 220)),    //#e8dcdc - light red
                     GraphLinePen = new Pen(Color.Goldenrod, 2),
                 },
                 new PercentileDrawSetting
@@ -172,6 +172,7 @@ namespace EasyChartLib
             };
 
 
+            //DrawLmsGraphs
             foreach (var percentileSetting in percentileDrawSettings)
             {
                 var percentileStats = allStats.GetPercentileStats(percentileSetting.Percentile)
@@ -191,11 +192,10 @@ namespace EasyChartLib
             }
 
 
-            //DrawLmsGraphs
             //DrawLmsMeasurements
             foreach (var measurement in measurements)
             {
-                xyChart.DrawPoint(Brushes.Navy, measurement.Lookup, measurement.MeasuredValue);
+                xyChart.DrawPoint(new Pen(Color.Navy, 8), measurement.Lookup, measurement.MeasuredValue);
             }
 
 
