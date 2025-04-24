@@ -56,7 +56,6 @@ namespace EasyChartLib
                 _chartArea = _imageArea;
             }
 
-            _chartArea.DrawBorder(Pens.Black);
         }
 
         public void DrawPoint(Pen pen, float lookup, float value)
@@ -143,6 +142,11 @@ namespace EasyChartLib
             var imageArea = new PercentGraphics(bmp, margin);
             imageArea.FillRectange(Brushes.White, 0, 0, 100, 100);
             return imageArea;
+        }
+
+        internal void DrawChartBorder()
+        {
+            _chartArea.DrawBorder(Pens.Black);
         }
 
         internal Bitmap GetBmp()

@@ -118,7 +118,7 @@ namespace EasyChartLib
             var maxLookup = maxMeasurementLookup + lmsFile.LookupZoomTo;
 
             var filteredLms = lmsFile.Lms
-                .Where(lmsStat => lmsStat.Lookup > minLookup && lmsStat.Lookup < maxLookup)
+                .Where(lmsStat => lmsStat.Lookup >= minLookup && lmsStat.Lookup <= maxLookup)
                 .OrderBy(lmsStat => lmsStat.Lookup);
 
             var allStats = new PercentilesStats(filteredLms);
@@ -206,6 +206,7 @@ namespace EasyChartLib
                 xyChart.DrawPoint(new Pen(Color.Navy, 10), measurement.Lookup, measurement.MeasuredValue);
             }
 
+            xyChart.DrawChartBorder();
 
             return xyChart.GetBmp();
         }
