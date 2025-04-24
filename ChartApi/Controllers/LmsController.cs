@@ -17,11 +17,11 @@ using System.Web.Http.Cors;
 
 namespace ChartApi.Controllers
 {
-    public class LmsChartController : ApiController
+    public class LmsController : ApiController
     {
+        //https://localhost:44341/Lms/PercentilesChart?sourceKey=BmiForAgeLmsByCdc&segmentKey=Boys2-20&measurements=[{%22Lookup%22:7,%22MeasuredValue%22:15}]&height=300&width=500
         [HttpGet, HttpOptions, EnableCors(origins: "*", headers: "*", methods: "*")]
-        [Route("LmsChart/{sourceKey}/{segmentKey}")]
-        public async Task<HttpResponseMessage> LmsChart([FromUri]string sourceKey, [FromUri] string segmentKey, string measurements , int height = 300, int width = 500)
+        public async Task<HttpResponseMessage> PercentilesChart(string sourceKey, string segmentKey, string measurements, int height = 300, int width = 500)
         {
             var chartSettings = new LmsChartSettings()
             {
