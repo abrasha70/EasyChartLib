@@ -20,7 +20,8 @@ namespace ChartApi.Controllers
     public class LmsChartController : ApiController
     {
         [HttpGet, HttpOptions, EnableCors(origins: "*", headers: "*", methods: "*")]
-        public async Task<HttpResponseMessage> LmsChart(string sourceKey, string segmentKey, string measurements , int height = 300, int width = 500)
+        [Route("LmsChart/{sourceKey}/{segmentKey}")]
+        public async Task<HttpResponseMessage> LmsChart([FromUri]string sourceKey, [FromUri] string segmentKey, string measurements , int height = 300, int width = 500)
         {
             var chartSettings = new LmsChartSettings()
             {
