@@ -37,15 +37,13 @@ namespace Tester
             {
                 Settings = new LmsChartSettings
                 {
+                    SourceKey = "BmiForAgeLmsByCdc",    //"BmiForAgeLmsByWho",
+                    SegmentKey = "Boys2-20",           //"Boys0-5"
                     Height = 300,
                     Width = 500,
                     ShowAxis = true,
-                    //ShowLegend = true,
                     ZoomMode = EZoomMode.FocusedAndNearby,
-                    //RanksAlpha = 255,
                     FontSize = 10f, //SystemFonts.DefaultFont.Size,
-                    SourceKey = "BmiForAgeLmsByCdc",    //"BmiForAgeLmsByWho",
-                    SegmentKey = "Boys2-20",           //"Boys0-5"
                 },
                 Measurements = new List<LmsMeasurement>
                 {
