@@ -34,7 +34,7 @@ namespace ChartApi.Controllers
 
             //overwrite settings:
             var settingsParameters = GetRequestParameters(_reservedParameters);
-            var jsonPropToProp = JsonPropToProp(typeof(ChartSettings));
+            var jsonPropToProp = JsonPropToProp(typeof(RanksChartSettings));
             foreach (var parameter in settingsParameters)
             {
                 var propName = parameter.Key;
