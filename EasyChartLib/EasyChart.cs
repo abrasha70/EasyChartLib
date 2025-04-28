@@ -113,9 +113,14 @@ namespace EasyChartLib
 
             var minMeasurementLookup = (decimal)measurements.Min(m => m.Lookup);
             var maxMeasurementLookup = (decimal)measurements.Max(m => m.Lookup);
+            var minMeasurementValue = measurements.Min(m => m.MeasuredValue);
+            var maxMeasurementValue = measurements.Max(m => m.MeasuredValue);
 
             var minLookup = minMeasurementLookup + lmsFile.LookupZoomFrom;
             var maxLookup = maxMeasurementLookup + lmsFile.LookupZoomTo;
+
+            if (minLookup < minLmsLookup) minLookup = minLmsLookup;
+            if (maxLookup > maxLmsLookup) maxLookup = maxLmsLookup;
 
             var filteredLms = lmsFile.Lms
                 .Where(lmsStat => lmsStat.Lookup >= minLookup && lmsStat.Lookup <= maxLookup)
@@ -125,6 +130,16 @@ namespace EasyChartLib
 
             var minValue = allStats.GetPercentileStats(EPercentile.Perc3).Min(m => m.PercentileValue);
             var maxValue = allStats.GetPercentileStats(EPercentile.Perc97).Max(m => m.PercentileValue);
+
+            if (minMeasurementValue < minValue)
+            {
+                minValue = minMeasurementValue.Value;
+            }
+            if (maxMeasurementValue > maxValue)
+            {
+                maxValue = maxMeasurementValue.Value;
+            }
+
 
             var lookupAxis = new Axis(minLookup, maxLookup, EDirection.LeftToRight);
             var valuesAxis = new Axis((decimal)minValue, (decimal)maxValue, EDirection.BottomToTop);
@@ -203,7 +218,9 @@ namespace EasyChartLib
             //DrawLmsMeasurements
             foreach (var measurement in measurements)
             {
-                xyChart.DrawPoint(new Pen(Color.Navy, 10), measurement.Lookup, measurement.MeasuredValue);
+                if (!measurement.MeasuredValue.HasValue) continue;
+
+                xyChart.DrawPoint(new Pen(Color.Navy, 10), measurement.Lookup, measurement.MeasuredValue.Value);
             }
 
             xyChart.DrawChartBorder();

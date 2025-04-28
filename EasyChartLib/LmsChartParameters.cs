@@ -14,7 +14,7 @@ namespace EasyChartLib
     {
         public float Lookup { get; set; }
 
-        public float MeasuredValue { get; set; }
+        public float? MeasuredValue { get; set; }
     }
 
 
