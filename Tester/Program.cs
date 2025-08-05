@@ -31,16 +31,17 @@ namespace Tester
             //System.Diagnostics.Process.Start("sample.png");
         }
 
+        //measurements=%5B%7B%22Lookup%22%3A0.7250%2C%22MeasuredValue%22%3A18.4000%7D%2C%7B%22Lookup%22%3A7.7916%2C%22MeasuredValue%22%3A16.0000%7D%2C%7B%22Lookup%22%3A0.8333%2C%22MeasuredValue%22%3A17.3000%7D%2C%7B%22Lookup%22%3A8.1166%2C%22MeasuredValue%22%3A17.8000%7D%5D
         private static LmsChartParameters GetSampleLmsChartRequest()
         {
             var request = new LmsChartParameters
             {
                 Settings = new LmsChartSettings
                 {
-                    SourceKey = "BmiForAgeLmsByCdc",    //"BmiForAgeLmsByWho",
-                    SegmentKey = "Boys2-20",           //"Boys0-5"
-                    Height = 300,
-                    Width = 500,
+                    SourceKey = "BmiForAgeLmsByWho",    //"BmiForAgeLmsByCdc",
+                    SegmentKey = "Girls5-19",           //"Boys2-20"
+                    Height = 350,
+                    Width = 600,
                     ShowAxis = true,
                     ZoomMode = EZoomMode.FocusedAndNearby,
                     FontSize = 10f, //SystemFonts.DefaultFont.Size,
@@ -49,18 +50,18 @@ namespace Tester
                 {
                     new LmsMeasurement
                     {
-                        Lookup = 10,
-                        MeasuredValue = 16.8f,
+                        Lookup = 6,
+                        MeasuredValue = 18,
                     },
                     new LmsMeasurement
                     {
-                        Lookup = 8,
-                        MeasuredValue = 15,
+                        Lookup = 7.7916f,
+                        MeasuredValue = 16.0000f,
                     },
                     new LmsMeasurement
                     {
-                        Lookup = 7,
-                        MeasuredValue = 14.5f,
+                        Lookup = 8.1166f,
+                        MeasuredValue = 17.8000f,
                     }
                 }
             };
