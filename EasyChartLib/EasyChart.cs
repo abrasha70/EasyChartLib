@@ -119,8 +119,16 @@ namespace EasyChartLib
             var minLookup = minMeasurementLookup + lmsFile.LookupZoomFrom;
             var maxLookup = maxMeasurementLookup + lmsFile.LookupZoomTo;
 
-            if (minLookup < minLmsLookup) minLookup = minLmsLookup;
-            if (maxLookup > maxLmsLookup) maxLookup = maxLmsLookup;
+            if (settings.ZoomMode == EZoomMode.All)
+            {
+                minLookup = minLmsLookup;
+                maxLookup = maxLmsLookup;
+            }
+            else
+            {
+                if (minLookup < minLmsLookup) minLookup = minLmsLookup;
+                if (maxLookup > maxLmsLookup) maxLookup = maxLmsLookup;
+            }
 
             var filteredLms = lmsFile.Lms
                 .Where(lmsStat => lmsStat.Lookup >= minLookup && lmsStat.Lookup <= maxLookup)
